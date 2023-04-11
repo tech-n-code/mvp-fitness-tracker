@@ -18,6 +18,14 @@ app.get("/", function(req, res) {
     res.send("Hello, world!");
 });
 
+app.get('/api/fitness-test', function(req, res) {
+    client.query(`SELECT * FROM person`, function(err, response) {
+        console.log(err ? err : response.rows)
+        res.json(response.rows)
+        client.end;
+    })
+})
+
 app.listen(port, function(err) {
     if (err) {
         console.error(err);
