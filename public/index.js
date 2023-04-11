@@ -1,6 +1,6 @@
 let container = document.querySelector(".container");  //<-- assuming there is a container on page
 
-fetch("/api/fitness-test")
+fetch("/api/fitness-test/person")
 .then(function (response) {
     return response.json();
 })
