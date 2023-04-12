@@ -14,7 +14,7 @@ GET http://localhost:3000/api/fitness/person-by-name/Bob
 GET http://localhost:3000/api/fitness/person-by-id/7
 
 ### All tests under a person by their id
-GET http://localhost:3000/api/fitness/person-tests/6
+GET http://localhost:3000/api/fitness/person-tests/10
 
 ###
 POST http://localhost:3000/api/fitness/create-person

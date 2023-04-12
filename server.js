@@ -161,10 +161,10 @@ app.put('/api/fitness/update-test/:id', function(req, res) {
     client.query('UPDATE test SET pushup_score=$1, situp_score=$2, date=$3, person_id=$4 WHERE id=$5', [pushup_score, situp_score, date, person_id, id], function(err, response) {
         if (err) {
             console.error(err);
-            res.status(500).send('Error updating person');
+            res.status(500).send('Error updating test');
         } else {
             console.log(response);
-            res.status(200).send('Person updated successfully');
+            res.status(200).send('Test updated successfully');
         }
     });
 });
