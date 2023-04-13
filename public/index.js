@@ -1,8 +1,6 @@
-// import { response } from "express";
-
 const rootURL = "http://localhost:3000";
 
-let usersContainer = document.querySelector("#user_container")
+let usersContainer = document.querySelector("#users_container")
 
 fetch("/api/fitness/person")
     .then(response => {
@@ -13,7 +11,7 @@ fetch("/api/fitness/person")
         persons.forEach(person => {
             console.log(person);
             usersContainer.innerHTML +=
-                `<button id="btn-${person.id}" class="btn btn-success rounded-pill px-3" type="button">${person.name}</button>`
+                `<button id="btn-${person.id}" data-id="${person.id}" class="btn btn-success rounded-pill px-3" type="button">${person.name}</button>`
         });
         return persons;
     })
@@ -21,59 +19,49 @@ fetch("/api/fitness/person")
         persons.forEach(person => {
             let btn = document.querySelector(`#btn-${person.id}`);
             btn.addEventListener("click", event => {
-                console.log(`Clicked id ${person.id} for ${person.name}`);
+                console.log(`Clicked ${person.name} with id ${person.id}`);
+                loadPersonData(person.id);
             });
         });
     });
 
-let resultsContainer = document.querySelector("#results_container")
 
-// async function loadPersonData(id) {
-//     if (!id) {
-//         let usersContainer = document.querySelector("#usersContainer");
-//         let firstUser = usersContainer.querySelector(":first-child");
-//         fetch("/api/fitness/test")
-//         .then(response => {
-//             return response.json();
-//         })
-//         .then(tests => {
-//             console.log(tests);
-//             tests.forEach(test => {
-//                 console.log(test);
-//                 resultsContainer.innerHTML +=
-//                     `
-//                     <div>
+loadPersonData(3);
 
-                    
-//                     </div>
-                    
-//                     `
-//             });
-//         })
-
-
-//     } else {
-
-//     }
-// }
-
-
-
-
-
-function requestPerson(person) {
-    try {
-        fetch(`"/api/fitness/person/'${person}'"`)
-            .then(function(response) {
-                response.json();
-                console.log(response);
-            });
-    } catch (err) {
-        console.error(err);
-    }
+async function loadPersonData(id) {
+    let personData = document.querySelector("#dashboard");
+    fetch(`api/fitness/test?personID=${id}`)
+        .then(response => {
+            return response.json();
+        })
+        .then(person => {
+            console.log(person[0].name);
+            personData.innerHTML =
+                `<h2>${person[0].name}</h2>
+                <p>${person[0].gender}</p>
+                <p>${person[0].age}</p>`
+            return person;
+        })
+        .then(results => {
+            console.log(results);
+            let resultsContainer = document.querySelector("#results_container");
+            // resultsContainer.innerHTML = "";
+            results.forEach(result => {
+                resultsContainer.innerHTML +=
+                    `<div class="container text-secondary-emphasis bg-secondary-subtle border border-secondary-subtle rounded-3">
+                        <h4>Test date: ${result.date}</h4>
+                        <h4>Push-ups: ${result.pushup_score}</h4>
+                        <h4>Sit-ups: ${result.situp_score}<h4>
+                    </div>`
+            })
+        })
 }
 
-// createPerson("Kyle", "M", 45);
+//   http://localhost:3000/api/fitness/test?personID=2
+
+
+
+// createPerson("Ted", "M", 32);
 
 async function createPerson(name, gender, age) {
     let payload = JSON.stringify({
@@ -85,7 +73,7 @@ async function createPerson(name, gender, age) {
         "Content-Type": "application/json"
     });
     try {
-        let response = await fetch(`${rootURL}/api/fitness/create-person`, {
+        let response = await fetch(`${rootURL}/api/fitness/person/create`, {
             method: "POST",
             body: payload,
             headers: jsonHeaders
@@ -142,7 +130,7 @@ async function createTest(pushup_score, situp_score, date, person_id) {
         "Content-Type": "application/json"
     });
     try {
-        let response = await fetch(`${rootURL}/api/fitness/create-test`, {
+        let response = await fetch(`${rootURL}/api/fitness/test/create`, {
             method: "POST",
             body: payload,
             headers: jsonHeaders
@@ -171,7 +159,7 @@ async function updateTest(id, pushup_score, situp_score, date, person_id) {
         "Content-Type": "application/json"
     });
     try {
-        let response = await fetch(`${rootURL}/api/fitness/update-test/${id}`, {
+        let response = await fetch(`${rootURL}/api/fitness/test/update/${id}`, {
             method: "PUT",
             body: payload,
             headers: jsonHeaders

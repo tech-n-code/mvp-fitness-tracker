@@ -2,7 +2,7 @@
 GET http://localhost:3000/api/fitness/person
 
 ### Person by ID
-GET http://localhost:3000/api/fitness/person?id=20
+GET http://localhost:3000/api/fitness/person?id=9
 
 ### Person by name
 GET http://localhost:3000/api/fitness/person?name=Jeff
