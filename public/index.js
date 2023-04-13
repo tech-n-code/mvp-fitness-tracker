@@ -1,26 +1,65 @@
+// import { response } from "express";
+
 const rootURL = "http://localhost:3000";
 
-// let container = document.querySelector(".container");
+let usersContainer = document.querySelector("#user_container")
 
-// let payload = JSON.stringify({
-//     name: "Bob"
-// });
+fetch("/api/fitness/person")
+    .then(response => {
+        return response.json();
+    })
+    .then(persons => {
+        console.log(persons);
+        persons.forEach(person => {
+            console.log(person);
+            usersContainer.innerHTML +=
+                `<button id="btn-${person.id}" class="btn btn-success rounded-pill px-3" type="button">${person.name}</button>`
+        });
+        return persons;
+    })
+    .then(persons => {
+        persons.forEach(person => {
+            let btn = document.querySelector(`#btn-${person.id}`);
+            btn.addEventListener("click", event => {
+                console.log(`Clicked id ${person.id} for ${person.name}`);
+            });
+        });
+    });
 
-// let jsonHeaders = new Headers({
-//     "Content-Type": "application/json"
-// });
+let resultsContainer = document.querySelector("#results_container")
 
-// fetch("/api/fitness/person")
-//     .then(function (response) {
-//         return response.json();
-//     })
-//     .then(function (persons) {
-//         console.log(persons);
-//         persons.forEach(function (person) {
-//             console.log("Adding h2 for person:", person);
-//             container.innerHTML += `<h2>${person.name}</h2>`;
-//         });
-//     });
+// async function loadPersonData(id) {
+//     if (!id) {
+//         let usersContainer = document.querySelector("#usersContainer");
+//         let firstUser = usersContainer.querySelector(":first-child");
+//         fetch("/api/fitness/test")
+//         .then(response => {
+//             return response.json();
+//         })
+//         .then(tests => {
+//             console.log(tests);
+//             tests.forEach(test => {
+//                 console.log(test);
+//                 resultsContainer.innerHTML +=
+//                     `
+//                     <div>
+
+                    
+//                     </div>
+                    
+//                     `
+//             });
+//         })
+
+
+//     } else {
+
+//     }
+// }
+
+
+
+
 
 function requestPerson(person) {
     try {
