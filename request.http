@@ -2,10 +2,10 @@
 GET http://localhost:3000/api/fitness/person
 
 ### Person by ID
-GET http://localhost:3000/api/fitness/person?id=9
+GET http://localhost:3000/api/fitness/person?id=10
 
 ### Person by name
-GET http://localhost:3000/api/fitness/person?name=Jeff
+GET http://localhost:3000/api/fitness/person?name=Bob
 
 ### All tests
 GET http://localhost:3000/api/fitness/test
@@ -17,20 +17,20 @@ GET http://localhost:3000/api/fitness/test?testID=3
 GET http://localhost:3000/api/fitness/test?personID=2
 
 ### All tests for person by name
-GET http://localhost:3000/api/fitness/test?name=Kyle
+GET http://localhost:3000/api/fitness/test?name=Susan
 
 ### Create person
-POST http://localhost:3000/api/fitness/person/create
+POST http://localhost:3000/api/fitness/person
 Content-Type: application/json
 
 {
-    "name": "Anna",
+    "name": "Suzan",
     "gender": "F",
     "age": 21
 }
 
 ### Update person
-PUT http://localhost:3000/api/fitness/person/update/6
+PUT http://localhost:3000/api/fitness/person/6
 Content-Type: application/json
 
 {
@@ -40,18 +40,18 @@ Content-Type: application/json
 }
 
 ### Update person
-PATCH http://localhost:3000/api/fitness/person/update/6
+PATCH http://localhost:3000/api/fitness/person/2
 Content-Type: application/json
 
 {
-    "name": "Lissa"
+    "name": "Margarett"
 }
 
 ### Delete person by id
-DELETE http://localhost:3000/api/fitness/person/delete/11
+DELETE http://localhost:3000/api/fitness/person/9
 
 ### Create test
-POST http://localhost:3000/api/fitness/test/create
+POST http://localhost:3000/api/fitness/test
 Content-Type: application/json
 
 {
@@ -62,7 +62,7 @@ Content-Type: application/json
 }
 
 ### Update test by id
-PUT http://localhost:3000/api/fitness/test/update/6
+PUT http://localhost:3000/api/fitness/test/6
 Content-Type: application/json
 
 {
@@ -71,3 +71,6 @@ Content-Type: application/json
     "date": "2023-04-10 09:45:00",
     "person_id": 13
 }
+
+### Delete test by id
+DELETE http://localhost:3000/api/fitness/test/9

@@ -122,7 +122,7 @@ app.get('/api/fitness/test', (req, res) => {
     }
 })
 
-app.post('/api/fitness/person/create', function(req, res) {
+app.post('/api/fitness/person', function(req, res) {
     const { name, gender, age } = req.body;
     pool.query(`INSERT INTO person (name, gender, age) VALUES ($1, $2, $3)`, [name, gender, age], function(err, result) {
         if (err) {
@@ -136,7 +136,7 @@ app.post('/api/fitness/person/create', function(req, res) {
     })
 })
 
-app.put('/api/fitness/person/update/:id', function(req, res) {
+app.put('/api/fitness/person/:id', function(req, res) {
     const id = req.params.id;
     const { name, gender, age } = req.body;
     pool.query('UPDATE person SET name=$1, gender=$2, age=$3 WHERE id=$4', [name, gender, age, id], function(err, result) {
@@ -151,7 +151,7 @@ app.put('/api/fitness/person/update/:id', function(req, res) {
     });
 });
 
-app.patch('/api/fitness/person/update/:id', function(req, res) {
+app.patch('/api/fitness/person/:id', function(req, res) {
     const id = req.params.id;
     let data = req.body;
     let query = 'UPDATE person SET name = COALESCE($1, name), gender = COALESCE($2, gender), age = COALESCE($3, age) WHERE id = $4 RETURNING *';
@@ -168,7 +168,7 @@ app.patch('/api/fitness/person/update/:id', function(req, res) {
     });
 });
 
-app.delete('/api/fitness/person/delete/:id', function(req, res) {
+app.delete('/api/fitness/person/:id', function(req, res) {
     const id = req.params.id;
     pool.query('DELETE FROM person WHERE id = $1', [id], function(err, result) {
         if (err) {
@@ -182,7 +182,7 @@ app.delete('/api/fitness/person/delete/:id', function(req, res) {
     });
 });
 
-app.post('/api/fitness/test/create', function(req, res) {
+app.post('/api/fitness/test', function(req, res) {
     const { pushup_score, situp_score, date, person_id } = req.body;
     pool.query('INSERT INTO test (pushup_score, situp_score, date, person_id) VALUES ($1, $2, $3, $4)', [pushup_score, situp_score, date, person_id], function(err, result) {
         if (err) {
@@ -196,7 +196,7 @@ app.post('/api/fitness/test/create', function(req, res) {
     });
 });
 
-app.put('/api/fitness/test/update/:id', function(req, res) {
+app.put('/api/fitness/test/:id', function(req, res) {
     const id = req.params.id;
     const { pushup_score, situp_score, date, person_id } = req.body;
       pool.query('UPDATE test SET pushup_score=$1, situp_score=$2, date=$3, person_id=$4 WHERE id=$5', [pushup_score, situp_score, date, person_id, id], function(err, result) {
@@ -211,7 +211,21 @@ app.put('/api/fitness/test/update/:id', function(req, res) {
     });
 });
 
-app.listen(port, function(err) {
+app.delete('/api/fitness/test/:id', function(req, res) {
+    const id = req.params.id;
+    pool.query('DELETE FROM test WHERE id = $1', [id], function(err, result) {
+        if (err) {
+            console.error(err);
+            res.status(500).send("Error deleting test");
+        } else {
+            console.log(result.rows);
+            console.log("Test deleted successfully");
+            res.status(204).send("Test deleted successfully");
+        }
+    });
+});
+
+app.listen(port, err => {
     if (err) {
         console.error(err);
     } else {
