@@ -52,23 +52,30 @@ app.get('/api/fitness/all-tests', function(req, res) {
         }
     })
 })
+//api/people/name="person"
 
-app.get('/api/fitness/person-by-name/:person', function(req, res) {
-    const person = req.params.person;
-    pool.query(`SELECT * FROM person WHERE name = $1`, [person], function(err, response) {
-        if (err) {
-            console.error(err);
-            res.status(500).send('Error reading person');
-        } else if (response.rows.length === 0) {
-            console.log(`Person with id ${person} not found`);
-            res.status(404).send(`Person with id ${person} not found`);
-        } else {
-            console.log(response.rows);
-            res.json(response.rows);
-        }
-    })
-})
+app.get('/api/people', function(req, res) {
+    // const person = req.params.person;
+    console.log(req.query);
+});
 
+// app.get('/api/fitness/person-by-name/:person', function(req, res) {
+//     const person = req.params.person;
+//     pool.query(`SELECT * FROM person WHERE name = $1`, [person], function(err, response) {
+//         if (err) {
+//             console.error(err);
+//             res.status(500).send('Error reading person');
+//         } else if (response.rows.length === 0) {
+//             console.log(`Person with id ${person} not found`);
+//             res.status(404).send(`Person with id ${person} not found`);
+//         } else {
+//             console.log(response.rows);
+//             res.json(response.rows);
+//         }
+//     })
+// })
+
+// api/people/id
 app.get('/api/fitness/person-by-id/:id', function(req, res) {
     const id = req.params.id;
     pool.query(`SELECT * FROM person WHERE id = $1`, [id], function(err, response) {

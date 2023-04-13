@@ -2,6 +2,12 @@
 GET http://localhost:3000
 
 ###
+GET http://localhost:3001/api/people?something=Bob&second=something
+
+###
+GET http://localhost:3001/api/people/1
+
+###
 GET http://localhost:3000/api/fitness/all-persons
 
 ###
