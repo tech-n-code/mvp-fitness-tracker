@@ -1,6 +1,7 @@
 // const rootURL = "http://localhost:3000";
 
-let usersContainer = document.querySelector("#users_container")
+const usersContainer = document.querySelector("#users_container")
+const resultsDashboard = document.querySelector("#resultsDashboard");
 
 loadPersonData(3);
 
@@ -19,7 +20,7 @@ fetch("/api/fitness/person")
     })
     .then(persons => {
         persons.forEach(person => {
-            let btn = document.querySelector(`#btn-${person.id}`);
+            const btn = document.querySelector(`#btn-${person.id}`);
             btn.addEventListener("click", event => {
                 console.log(`Clicked ${person.name} with id ${person.id}`);
                 loadPersonData(person.id);
@@ -28,7 +29,7 @@ fetch("/api/fitness/person")
     });
 
 async function loadPersonData(id) {
-    let personData = document.querySelector("#dashboard");
+    const personData = document.querySelector("#dashboard");
     fetch(`api/fitness/test?personID=${id}`)
         .then(response => {
             return response.json();
@@ -45,15 +46,19 @@ async function loadPersonData(id) {
         })
         .then(results => {
             console.log(results);
-            let resultsContainer = document.querySelector("#results_container");
-            // resultsContainer.innerHTML = "";
+            resultsDashboard.innerHTML = "";
             results.forEach(result => {
-                resultsContainer.innerHTML +=
-                    `<div>
-                        <div class="container text-secondary-emphasis bg-secondary-subtle border border-secondary-subtle rounded-3">
-                            <h4>Test date: ${result.date}</h4>
-                            <h4>Push-ups: ${result.pushup_score}</h4>
-                            <h4>Sit-ups: ${result.situp_score}<h4>
+                resultsDashboard.innerHTML +=
+                    `<div class="d-flex flex-column">
+                        <div class="d-flex flex-column text-secondary-emphasis bg-secondary-subtle border border-secondary-subtle rounded-3">
+                            <div class="d-flex flex-column p-2">
+                                <h4>Test date: ${result.date}</h4>
+                                <h4>Push-ups: ${result.pushup_score}</h4>
+                                <h4>Sit-ups: ${result.situp_score}<h4>
+                            </div>
+                            <div class="d-flex flex-column align-items-end">
+                                <div class="d-flex flex-column p-2 gap-2">Future Menu</div>
+                            </div>
                         </div>
                     </div>`
             })
