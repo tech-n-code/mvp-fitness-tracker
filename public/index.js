@@ -1,9 +1,10 @@
 // const rootURL = "http://localhost:3000";
 
 const usersContainer = document.querySelector("#users_container")
-const resultsDashboard = document.querySelector("#resultsDashboard");
+// const resultsDashboard = document.querySelector("#resultsDashboard");
+const resultsContainer = document.querySelector("#results_container");
 
-loadPersonData(3);
+loadPersonCard(3);
 
 fetch("/api/fitness/person")
     .then(response => {
@@ -23,43 +24,36 @@ fetch("/api/fitness/person")
             const btn = document.querySelector(`#btn-${person.id}`);
             btn.addEventListener("click", event => {
                 console.log(`Clicked ${person.name} with id ${person.id}`);
-                loadPersonData(person.id);
+                resultsContainer.innerHTML = "";
+                loadPersonCard(person.id);
             });
         });
     });
 
-async function loadPersonData(id) {
-    const personData = document.querySelector("#dashboard");
+async function loadPersonCard(id) {
     fetch(`api/fitness/test?personID=${id}`)
         .then(response => {
             return response.json();
         })
         .then(person => {
             console.log(person[0].name);
-            personData.innerHTML =
-                `<div>
-                    <h2>${person[0].name}</h2>
-                    <p>${person[0].gender}</p>
-                    <p>${person[0].age}</p>
+            const gender = person[0].gender === "M" ? "Male" : "Female";
+            resultsContainer.innerHTML =
+                `<div id="card-${id}" class="card">
+                    <div class="card-header">${person[0].name} (${person[0].age} yrs old ${gender})</div>
                 </div>`
             return person;
         })
         .then(results => {
+            results.reverse();
             console.log(results);
-            resultsDashboard.innerHTML = "";
             results.forEach(result => {
-                resultsDashboard.innerHTML +=
-                    `<div class="d-flex flex-column">
-                        <div class="d-flex flex-column text-secondary-emphasis bg-secondary-subtle border border-secondary-subtle rounded-3">
-                            <div class="d-flex flex-column p-2">
-                                <h4>Test date: ${result.date}</h4>
-                                <h4>Push-ups: ${result.pushup_score}</h4>
-                                <h4>Sit-ups: ${result.situp_score}<h4>
-                            </div>
-                            <div class="d-flex flex-column align-items-end">
-                                <div class="d-flex flex-column p-2 gap-2">Future Menu</div>
-                            </div>
-                        </div>
+                const card = document.querySelector(`#card-${id}`)
+                card.innerHTML +=
+                    `<div class="card-body">
+                        <h5>Test date: ${result.date}</h5>
+                        <p>Hand Release Push-ups: ${result.pushup_score}</p>
+                        <p>Sit-ups: ${result.situp_score}</p>
                     </div>`
             })
         })
