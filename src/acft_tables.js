@@ -580,7 +580,7 @@ const scoringScales = {
                 { "score": 10, "rawScore": 4.7 },
                 { "score": 11, "rawScore": "---" },
                 { "score": 12, "rawScore": 4.8 },
-                { "score": 13, "rawScore": --- },
+                { "score": 13, "rawScore": "---" },
                 { "score": 14, "rawScore": 4.9 },
                 { "score": 15, "rawScore": "---" },
                 { "score": 16, "rawScore": 5.0 },
