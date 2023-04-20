@@ -10324,3 +10324,5 @@ const scoringScales = {
         }
     }
 };
+
+export { scoringScales };

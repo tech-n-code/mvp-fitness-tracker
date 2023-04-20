@@ -1,12 +1,11 @@
 // const rootURL = "http://localhost:3000";
 
 const usersContainer = document.querySelector("#users_container")
-// const resultsDashboard = document.querySelector("#resultsDashboard");
 const resultsContainer = document.querySelector("#results_container");
 
 loadPersonCard(3);
 
-fetch("/api/fitness/person")
+fetch("/api/acft/person")
     .then(response => {
         return response.json();
     })
@@ -31,7 +30,7 @@ fetch("/api/fitness/person")
     });
 
 async function loadPersonCard(id) {
-    fetch(`api/fitness/test?personID=${id}`)
+    fetch(`api/acft/test?personID=${id}`)
         .then(response => {
             return response.json();
         })
@@ -39,24 +38,62 @@ async function loadPersonCard(id) {
             console.log(person[0].name);
             const gender = person[0].gender === "M" ? "Male" : "Female";
             resultsContainer.innerHTML =
-                `<div id="card-${id}" class="card">
+                `<div id="card-${person[0].person_id}" class="card">
                     <div class="card-header">${person[0].name} (${person[0].age} yrs old ${gender})</div>
                 </div>`
             return person;
         })
         .then(results => {
             results.reverse();
-            console.log(results);
             results.forEach(result => {
-                const card = document.querySelector(`#card-${id}`)
+                let formattedDate = formatDate(result.date);
+                let sdcSeconds = formatSeconds(result.sdc.seconds);
+                let plkSeconds = formatSeconds(result.plk.seconds);
+                let two_mrSeconds = formatSeconds(result.two_mr.seconds);
+                const card = document.querySelector(`#card-${result.person_id}`);
                 card.innerHTML +=
                     `<div class="card-body">
-                        <h5>Test date: ${result.date}</h5>
-                        <p>Hand Release Push-ups: ${result.pushup_score}</p>
-                        <p>Sit-ups: ${result.situp_score}</p>
+                        <div class="accordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#result-${result.id}" aria-expanded="true" aria-controls="result-${result.id}">
+                                        Test date: ${formattedDate}
+                                    </button>
+                                </h2>
+                                <div id="result-${result.id}" class="accordion-collapse collapse">
+                                    <div class="accordion-body">
+                                        <p>Max Deadlift (MDL): ${result.mdl}</p>
+                                        <p>Standing Power Throw (SPT): ${result.spt}</p>
+                                        <p>Hand Release Push-ups (HRP): ${result.hrp}</p>
+                                        <p>Spint-Drag-Carry (SDC): ${result.sdc.minutes}:${sdcSeconds}</p>
+                                        <p>Plank (PLK): ${result.plk.minutes}:${plkSeconds}</p>
+                                        <p>Two-Mile Run (2MR): ${result.two_mr.minutes}:${two_mrSeconds}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>`
             })
+            const card = document.querySelector(`#result-${results[0].id}`);
+            card.classList.add("show");
         })
+}
+
+function formatDate(resultDate) {
+    let date = new Date(resultDate);
+    let day = date.getDate();
+    let month = date.toLocaleString("default", { month: 'long' });
+    let year = date.getFullYear();
+    let formattedDate = `${day} ${month} ${year}`;
+    return formattedDate;
+}
+
+function formatSeconds(seconds) {
+    if (seconds < 10) {
+        let twoDigitSeconds = `0${seconds}`;
+        return twoDigitSeconds;
+    }
+    return seconds;
 }
 
 // createPerson("Ted", "M", 32);
@@ -71,7 +108,7 @@ async function createPerson(name, gender, age) {
         "Content-Type": "application/json"
     });
     try {
-        let response = await fetch(`/api/fitness/person`, {  // ${rootURL}
+        let response = await fetch(`/api/acft/person`, {  // ${rootURL}
             method: "POST",
             body: payload,
             headers: jsonHeaders
@@ -99,7 +136,7 @@ async function updatePerson(id, name, gender, age) {
         "Content-Type": "application/json"
     });
     try {
-        let response = await fetch(`/api/fitness/person/${id}`, {  // ${rootURL}
+        let response = await fetch(`/api/acft/person/${id}`, {  // ${rootURL}
             method: "PUT",
             body: payload,
             headers: jsonHeaders
@@ -128,7 +165,7 @@ async function createTest(pushup_score, situp_score, date, person_id) {
         "Content-Type": "application/json"
     });
     try {
-        let response = await fetch(`/api/fitness/test`, {  // ${rootURL}
+        let response = await fetch(`/api/acft/test`, {  // ${rootURL}
             method: "POST",
             body: payload,
             headers: jsonHeaders
@@ -157,7 +194,7 @@ async function updateTest(id, pushup_score, situp_score, date, person_id) {
         "Content-Type": "application/json"
     });
     try {
-        let response = await fetch(`/api/fitness/test/${id}`, {  // ${rootURL}
+        let response = await fetch(`/api/acft/test/${id}`, {  // ${rootURL}
             method: "PUT",
             body: payload,
             headers: jsonHeaders

@@ -10,9 +10,13 @@ CREATE TABLE person (
 
 CREATE TABLE test (
     id SERIAL PRIMARY KEY,
-    pushup_score INT,
-    situp_score INT,
-    date TIMESTAMP,
+    mdl INT,
+    spt NUMERIC(4,1),
+    hrp INT,
+    sdc INTERVAL MINUTE TO SECOND,
+    plk INTERVAL MINUTE TO SECOND,
+    two_mr INTERVAL MINUTE TO SECOND,
+    date DATE,
     person_id INT,
     CONSTRAINT fk_person
         FOREIGN KEY(person_id)

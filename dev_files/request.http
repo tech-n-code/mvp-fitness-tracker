@@ -1,0 +1,85 @@
+### All Persons
+GET http://localhost:3000/api/acft/person
+
+### Person by ID
+GET http://localhost:3000/api/acft/person?id=3
+
+### Person by name
+GET http://localhost:3000/api/acft/person?name=Bob
+
+### All tests
+GET http://localhost:3000/api/acft/test
+
+### Test by ID
+GET http://localhost:3000/api/acft/test?testID=3
+
+### All tests for person by ID
+GET http://localhost:3000/api/acft/test?personID=3
+
+### All tests for person by name
+GET http://localhost:3000/api/acft/test?name=Susan
+
+### Create person
+POST http://localhost:3000/api/acft/person
+Content-Type: application/json
+
+{
+    "name": "Suzan",
+    "gender": "F",
+    "age": 21
+}
+
+### Update person (all fields)
+PUT http://localhost:3000/api/acft/person/6
+Content-Type: application/json
+
+{
+    "name": "Anna",
+    "gender": "F",
+    "age": 37
+}
+
+### Update person (individual field)
+PATCH http://localhost:3000/api/acft/person/2
+Content-Type: application/json
+
+{
+    "name": "Margarett"
+}
+
+### Delete person by id
+DELETE http://localhost:3000/api/acft/person/9
+
+### Create test
+POST http://localhost:3000/api/acft/test
+Content-Type: application/json
+
+{
+    "pushup_score": 65,
+    "situp_score": 56,
+    "date": "2023-04-10 09:45:00",
+    "person_id": 13
+}
+
+### Update test by id
+PUT http://localhost:3000/api/acft/test/6
+Content-Type: application/json
+
+{
+    "pushup_score": 65,
+    "situp_score": 56,
+    "date": "2023-04-10 09:45:00",
+    "person_id": 13
+}
+
+### Update test (individual field)
+PATCH http://localhost:3000/api/acft/test/2
+Content-Type: application/json
+
+{
+    "hrp": 35
+}
+
+
+### Delete test by id
+DELETE http://localhost:3000/api/acft/test/9
