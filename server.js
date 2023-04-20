@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import pg from "pg";
 const { Pool } = pg;
-import { scoreNumBasedValue, scoreTimeBasedValue } from "./src/score_calc.js";
+import { scoreNumBased, scoreTimeBased } from "./src/score_calc.js";
 
 const app = express();
 app.use(express.static("public"));
