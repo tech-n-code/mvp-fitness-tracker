@@ -2,6 +2,16 @@
 
 const usersContainer = document.querySelector("#users_container")
 const resultsContainer = document.querySelector("#results_container");
+const darkModeSwitch = document.querySelector("#darkMode");
+darkModeSwitch.addEventListener("change", (event) => {
+    if (event.target.checked) {
+        const htmlTag = document.querySelector('html');
+        htmlTag.setAttribute('data-bs-theme', 'dark');
+    } else {
+        const htmlTag = document.querySelector('html');
+        htmlTag.removeAttribute('data-bs-theme');
+    }
+});
 
 loadPersonCard(3);
 
@@ -38,7 +48,7 @@ async function loadPersonCard(id) {
             console.log(person[0].name);
             const gender = person[0].gender === "M" ? "Male" : "Female";
             resultsContainer.innerHTML =
-                `<div id="card-${person[0].person_id}" class="card">
+                `<div id="card-${person[0].person_id}" class="card text-secondary-emphasis bg-secondary-subtle border border-secondary-subtle">
                     <div class="card-header">${person[0].name} (${person[0].age} yrs old ${gender})</div>
                 </div>`
             return person;
@@ -56,26 +66,46 @@ async function loadPersonCard(id) {
                         <div class="accordion">
                             <div class="accordion-item">
                                 <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#result-${result.id}" aria-expanded="true" aria-controls="result-${result.id}">
+                                    <button id="date-banner-${result.id}" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#result-${result.id}" aria-expanded="true" aria-controls="result-${result.id}">
                                         Test date: ${formattedDate}
                                     </button>
                                 </h2>
                                 <div id="result-${result.id}" class="accordion-collapse collapse">
                                     <div class="accordion-body">
-                                        <p>Max Deadlift (MDL): ${result.mdl}</p>
-                                        <p>Standing Power Throw (SPT): ${result.spt}</p>
-                                        <p>Hand Release Push-ups (HRP): ${result.hrp}</p>
-                                        <p>Spint-Drag-Carry (SDC): ${result.sdc.minutes}:${sdcSeconds}</p>
-                                        <p>Plank (PLK): ${result.plk.minutes}:${plkSeconds}</p>
-                                        <p>Two-Mile Run (2MR): ${result.run.minutes}:${runSeconds}</p>
+                                        <p class="mb-0">Max Deadlift (MDL): ${result.mdl} lbs</p>
+                                            <div class="progress" role="progressbar" aria-label="mdl" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                                                <div class="progress-bar" style="width: ${result.mdlScore}%">${result.mdlScore} points</div>
+                                            </div>
+                                        <p class="mb-0 mt-3">Standing Power Throw (SPT): ${result.spt} m</p>
+                                            <div class="progress" role="progressbar" aria-label="spt" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                                                <div class="progress-bar" style="width: ${result.sptScore}%">${result.sptScore} points</div>
+                                            </div>
+                                        <p class="mb-0 mt-3">Hand Release Push-ups (HRP): ${result.hrp} reps</p>
+                                            <div class="progress" role="progressbar" aria-label="hrp" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                                                <div class="progress-bar" style="width: ${result.hrpScore}%">${result.hrpScore} points</div>
+                                            </div>
+                                        <p class="mb-0 mt-3">Spint-Drag-Carry (SDC): ${result.sdc.minutes}:${sdcSeconds} mins</p>
+                                            <div class="progress" role="progressbar" aria-label="sdc" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                                                <div class="progress-bar" style="width: ${result.sdcScore}%">${result.sdcScore} points</div>
+                                            </div>
+                                        <p class="mb-0 mt-3">Plank (PLK): ${result.plk.minutes}:${plkSeconds} mins</p>
+                                            <div class="progress" role="progressbar" aria-label="plk" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                                                <div class="progress-bar" style="width: ${result.plkScore}%">${result.plkScore} points</div>
+                                            </div>
+                                        <p class="mb-0 mt-3">Two-Mile Run (2MR): ${result.run.minutes}:${runSeconds} mins</p>
+                                            <div class="progress" role="progressbar" aria-label="run" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                                                <div class="progress-bar" style="width: ${result.runScore}%>${result.runScore} points</div>
+                                            </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>`
             })
-            const card = document.querySelector(`#result-${results[0].id}`);
-            card.classList.add("show");
+            const testCardHeadder = document.querySelector(`#date-banner-${results[0].id}`);
+            testCardHeadder.classList.remove("collapsed");
+            const testCardResults = document.querySelector(`#result-${results[0].id}`);
+            testCardResults.classList.add("show");
         })
 }
 

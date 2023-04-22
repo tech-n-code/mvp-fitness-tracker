@@ -24,6 +24,7 @@ export function scoreNumBased(gender, age, event, num) {
 }
 
 // console.log(scoreTimeBased("M", 38, "sdc", 2, 45)); //73
+// console.log(scoreTimeBased("M", 38, "sdc", 2, 45)); //73
 
 export function scoreTimeBased(gender, age, event, min, sec) {
     const ageStr = ageToStrBracket(age);
@@ -58,7 +59,9 @@ export function scoreTimeBased(gender, age, event, min, sec) {
                 return eventArray[i].score;
             } else if (timeInSeconds > rawScoreInSeconds) {
                 return eventArray[i - 1].score;
-            } 
+            } //else if (i = eventArray.length - 1) {   NEEDS FIX for folks going above table socores
+            //     return 100;
+            // }
         }
     }
 }
