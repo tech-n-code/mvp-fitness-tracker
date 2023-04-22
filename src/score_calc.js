@@ -2,7 +2,7 @@ import { scoringScales } from "./acft_tables.js";
 
 // console.log(scoreNumBased("M", 28, "hrp", 31)); //75
 
-function scoreNumBased(gender, age, event, num) {
+export function scoreNumBased(gender, age, event, num) {
     const ageStr = ageToStrBracket(age);
     const eventVerbose = eventToVerbose(event);
     const genderStr = gender === "M" ? "male" : "female";
@@ -12,7 +12,7 @@ function scoreNumBased(gender, age, event, num) {
         if (num === eventArray[i].rawScore) {
             return eventArray[i].score;
         } else if (eventArray[i].rawScore === "---") {
-            counter++
+            counter++;
             continue;
         } else if (num > eventArray[i].rawScore) {
             counter = 0;
@@ -23,9 +23,9 @@ function scoreNumBased(gender, age, event, num) {
     }
 }
 
-// console.log(scoreTimeBased("M", 18, "1ks", 31, 59)); //63
+// console.log(scoreTimeBased("M", 38, "sdc", 2, 45)); //73
 
-function scoreTimeBased(gender, age, event, min, sec) {
+export function scoreTimeBased(gender, age, event, min, sec) {
     const ageStr = ageToStrBracket(age);
     const eventVerbose = eventToVerbose(event);
     const timeInSeconds = (min * 60) + sec;
@@ -34,16 +34,31 @@ function scoreTimeBased(gender, age, event, min, sec) {
     if (eventVerbose === "2.5 mile walk" || eventVerbose === "12km bike" || eventVerbose === "1km swim" || eventVerbose === "5km row") {
         let rawScoreInSeconds = convertToSeconds(eventArray);
         return timeInSeconds <= rawScoreInSeconds ? "Go" : "No-Go";
+    } else if (eventVerbose === "plank") {
+        let counter = 0;
+        for (let i = 0; i < eventArray.length; i++) {
+            if (eventArray[i].rawScore === "---") {
+                counter++;
+                continue;
+            }
+            let rawScoreInSeconds = convertToSeconds(eventArray[i].rawScore);
+            if (timeInSeconds === rawScoreInSeconds) {
+                return eventArray[i].score;
+            } else if (timeInSeconds > rawScoreInSeconds) {
+                counter = 0;
+                continue;
+            } else {
+                return eventArray[i - (counter + 1)].score;
+            }
+        }
     } else {
         for (let i = 0; i < eventArray.length; i++) {
             let rawScoreInSeconds = convertToSeconds(eventArray[i].rawScore);
             if (timeInSeconds === rawScoreInSeconds) {
                 return eventArray[i].score;
             } else if (timeInSeconds > rawScoreInSeconds) {
-                return eventArray[i - 1].score; 
-            } else {
-                continue;
-            }
+                return eventArray[i - 1].score;
+            } 
         }
     }
 }
@@ -67,15 +82,15 @@ function eventToVerbose(event) {
         eventVerbose = "sprint drag carry";
     } else if (event === "plk") {
         eventVerbose = "plank";
-    } else if (event === "2mr") {
+    } else if (event === "run") {
         eventVerbose = "two mile run";
-    } else if (event === "2mw") {
+    } else if (event === "walk") {
         eventVerbose = "2.5 mile walk";
-    } else if (event === "12kb") {
+    } else if (event === "bike") {
         eventVerbose = "12km bike";
-    } else if (event === "1ks") {
+    } else if (event === "swim") {
         eventVerbose = "1km swim";
-    } else if (event === "5kr") {
+    } else if (event === "kmrow") {
         eventVerbose = "5km row";
     }
     return eventVerbose;
@@ -106,5 +121,3 @@ function ageToStrBracket(age) {
     }
     return ageStr;
 }
-
-export { scoreNumBased, scoreTimeBased };

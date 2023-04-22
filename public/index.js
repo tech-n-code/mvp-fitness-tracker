@@ -49,7 +49,7 @@ async function loadPersonCard(id) {
                 let formattedDate = formatDate(result.date);
                 let sdcSeconds = formatSeconds(result.sdc.seconds);
                 let plkSeconds = formatSeconds(result.plk.seconds);
-                let two_mrSeconds = formatSeconds(result.two_mr.seconds);
+                let runSeconds = formatSeconds(result.run.seconds);
                 const card = document.querySelector(`#card-${result.person_id}`);
                 card.innerHTML +=
                     `<div class="card-body">
@@ -67,7 +67,7 @@ async function loadPersonCard(id) {
                                         <p>Hand Release Push-ups (HRP): ${result.hrp}</p>
                                         <p>Spint-Drag-Carry (SDC): ${result.sdc.minutes}:${sdcSeconds}</p>
                                         <p>Plank (PLK): ${result.plk.minutes}:${plkSeconds}</p>
-                                        <p>Two-Mile Run (2MR): ${result.two_mr.minutes}:${two_mrSeconds}</p>
+                                        <p>Two-Mile Run (2MR): ${result.run.minutes}:${runSeconds}</p>
                                     </div>
                                 </div>
                             </div>

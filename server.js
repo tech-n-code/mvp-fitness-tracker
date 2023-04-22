@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import pg from "pg";
 const { Pool } = pg;
-import { scoreNumBased, scoreTimeBased } from "./src/score_calc.js";
+import { insertScoresToJson } from "./src/insert_scores.js";
 
 const app = express();
 app.use(express.static("public"));
@@ -75,8 +75,12 @@ app.get('/api/acft/test', (req, res) => {
                 console.log('No tests found');
                 res.status(404).send('No tests found');
             } else {
-                console.log(`Returned ${result.rows.length} records`);
-                res.json(result.rows);
+                console.log(result.rows);
+                const resultsWithScores = insertScoresToJson(result.rows);  //beta middleware
+                console.log(`Returned ${resultsWithScores.length} records`);
+                res.json(resultsWithScores);
+                // console.log(`Returned ${result.rows.length} records`);
+                // res.json(result.rows);
             }
         });
     } else if (req.query.name) {
