@@ -16,6 +16,11 @@ GET http://localhost:3000/api/acft/test?testID=3
 ### All tests for person by ID
 GET http://localhost:3000/api/acft/test?personID=3
 
+
+### Latest tests for person by ID
+GET http://localhost:3000/api/acft/test?personID=3&latest=true
+
+
 ### All tests for person by name
 GET http://localhost:3000/api/acft/test?name=Susan
 

@@ -22,12 +22,11 @@ fetch("/api/acft/person")
     .then(persons => {
         console.log(persons);
         persons.forEach(person => {
-            console.log(person);
-            usersContainer.innerHTML +=
-                `<button id="btn-${person.id}" data-id="${person.id}" class="btn btn-success rounded-pill px-3" type="button">${person.name}</button>`
-        });
+                usersContainer.innerHTML +=
+                    `<button id="btn-${person.id}" data-id="${person.id}" class="btn rounded-pill px-3" type="button">${person.name}</button>`
+        })
         return persons;
-    })
+        })
     .then(persons => {
         persons.forEach(person => {
             const btn = document.querySelector(`#btn-${person.id}`);
@@ -35,9 +34,18 @@ fetch("/api/acft/person")
                 console.log(`Clicked ${person.name} with id ${person.id}`);
                 resultsContainer.innerHTML = "";
                 loadPersonCard(person.id);
-            });
+            })
+            fetch(`/api/acft/test?personID=${person.id}&latest=true`)
+                .then(result => { 
+                    return result.json()
+                })
+                .then(result => {
+                    console.log(result);
+                    console.log(result.date);
+                    updateCurrencyColor(btn, result[0].date);
+                })
+            })
         });
-    });
 
 async function loadPersonCard(id) {
     fetch(`api/acft/test?personID=${id}`)
@@ -49,12 +57,15 @@ async function loadPersonCard(id) {
             const gender = person[0].gender === "M" ? "Male" : "Female";
             resultsContainer.innerHTML =
                 `<div id="card-${person[0].person_id}" class="card text-secondary-emphasis bg-secondary-subtle border border-secondary-subtle">
-                    <div class="card-header">${person[0].name} (${person[0].age} yrs old ${gender})</div>
+                    <div class="card-header">${person[0].name} (${person[0].age} yrs old ${gender})
+                    <span id="badge-${person[0].person_id}"></span></div>
                 </div>`
             return person;
         })
         .then(results => {
             results.reverse();
+            const testStatusBadge = document.querySelector(`#badge-${results[0].person_id}`);
+            updateCurrencyColor(testStatusBadge, results[0].date);
             results.forEach(result => {
                 let formattedDate = formatDate(result.date);
                 let sdcSeconds = formatSeconds(result.sdc.seconds);
@@ -107,6 +118,41 @@ async function loadPersonCard(id) {
             const testCardResults = document.querySelector(`#result-${results[0].id}`);
             testCardResults.classList.add("show");
         })
+}
+
+function updateCurrencyColor(elementObj, dateString) {
+    const currentDate = new Date();
+    const sixMonthsAgo = new Date(currentDate.getFullYear(), currentDate.getMonth() - 6, currentDate.getDate());
+    const oneYearAgo = new Date(currentDate.getFullYear() - 1, currentDate.getMonth(), currentDate.getDate());
+    const parsedDate = new Date(dateString);
+    if (elementObj.tagName.toLowerCase() === "button") {
+        elementObj.classList.remove("btn-success", "btn-warning", "btn-danger");
+        elementObj.classList.add()
+        if (parsedDate >= sixMonthsAgo) {
+            elementObj.classList.remove("btn-success", "btn-warning", "btn-danger");
+            elementObj.classList.add("btn-success");
+        } else if (parsedDate >= oneYearAgo) {
+            elementObj.classList.remove("btn-success", "btn-warning", "btn-danger");
+            elementObj.classList.add("btn-warning");
+        } else {
+            elementObj.classList.remove("btn-success", "btn-warning", "btn-danger");
+            elementObj.classList.add("btn-danger");
+        }
+    } else {
+        if (parsedDate >= sixMonthsAgo) {
+            elementObj.setAttribute("class", "");
+            elementObj.classList.add("badge", "text-bg-success");
+            elementObj.textContent = "Current";
+        } else if (parsedDate >= oneYearAgo) {
+            elementObj.setAttribute("class", "");
+            elementObj.classList.add("badge", "text-bg-warning");
+            elementObj.textContent = "6mo old";
+        } else {
+            elementObj.setAttribute("class", "");
+            elementObj.classList.add("badge", "text-bg-danger");
+            elementObj.textContent = "Overdue";
+        }
+    }
 }
 
 function formatDate(resultDate) {

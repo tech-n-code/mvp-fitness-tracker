@@ -4,7 +4,7 @@ INSERT INTO person (name, gender, age) VALUES ('Jeff', 'M', 40);
 
 INSERT INTO test (mdl, spt, hrp, sdc, plk, run, walk, bike, swim, kmrow, date, person_id) VALUES (230, 8.5, 35, '02:05', '02:51', '18:25', NULL, NULL, NULL, NULL, '2020-06-19', 1);
 INSERT INTO test (mdl, spt, hrp, sdc, plk, run, walk, bike, swim, kmrow, date, person_id) VALUES (240, 8.8, 39, '02:01', '02:56', '18:15', NULL, NULL, NULL, NULL, '2021-08-11', 1);
-INSERT INTO test (mdl, spt, hrp, sdc, plk, run, walk, bike, swim, kmrow, date, person_id) VALUES (250, 9.1, 43, '01:55', '03:05', '18:05', NULL, NULL, NULL, NULL, '2022-10-05', 1);
+INSERT INTO test (mdl, spt, hrp, sdc, plk, run, walk, bike, swim, kmrow, date, person_id) VALUES (250, 9.1, 43, '01:55', '03:05', '18:05', NULL, NULL, NULL, NULL, '2022-04-02', 1);
 
 INSERT INTO test (mdl, spt, hrp, sdc, plk, run, walk, bike, swim, kmrow, date, person_id) VALUES (150, 7.9, 30, '02:05', '03:03', '18:15', NULL, NULL, NULL, NULL, '2021-05-05', 2);
 INSERT INTO test (mdl, spt, hrp, sdc, plk, run, walk, bike, swim, kmrow, date, person_id) VALUES (160, 8.3, 35, '01:50', '03:16', '17:45', NULL, NULL, NULL, NULL, '2022-06-19', 2);

@@ -65,9 +65,9 @@ app.get('/api/acft/person', function(req, res) {
 
 app.get('/api/acft/test', (req, res) => {
     console.log(req.query);
-    if (req.query.personID) {  //<- /api/acft/test?personID=2
-        const id = req.query.personID;
-        pool.query(`SELECT * FROM person LEFT JOIN test ON person.id = test.person_id WHERE person.id = $1`, [id], function(err, result) {
+    if (req.query.personID && req.query.latest) {
+        const id = req.query.personID;  //<- /api/acft/test?personID=2&latest=true;
+        pool.query(`SELECT * FROM person LEFT JOIN test ON person.id = test.person_id WHERE person.id = $1 ORDER BY test.date DESC LIMIT 1`, [id], function(err, result) {
             if (err) {
                 console.error(err);
                 res.status(500).send('Error reading person-tests join table');
@@ -79,7 +79,7 @@ app.get('/api/acft/test', (req, res) => {
                 const resultsWithScores = insertScoresToJson(result.rows);  //beta middleware
                 console.log(`Returned ${resultsWithScores.length} records`);
                 res.json(resultsWithScores);
-                // console.log(`Returned ${result.rows.length} records`);
+                console.log(`Returned ${result.rows.length} records`);
                 // res.json(result.rows);
             }
         });
@@ -109,6 +109,24 @@ app.get('/api/acft/test', (req, res) => {
             } else {
                 console.log(result.rows);
                 res.json(result.rows);
+            }
+        });
+    } else if (req.query.personID) {  //<- /api/acft/test?personID=2
+        const id = req.query.personID;
+        pool.query(`SELECT * FROM person LEFT JOIN test ON person.id = test.person_id WHERE person.id = $1`, [id], function(err, result) {
+            if (err) {
+                console.error(err);
+                res.status(500).send('Error reading person-tests join table');
+            } else if (result.rows.length === 0) {
+                console.log('No tests found');
+                res.status(404).send('No tests found');
+            } else {
+                console.log(result.rows);
+                const resultsWithScores = insertScoresToJson(result.rows);  //beta middleware
+                console.log(`Returned ${resultsWithScores.length} records`);
+                res.json(resultsWithScores);
+                console.log(`Returned ${result.rows.length} records`);
+                // res.json(result.rows);
             }
         });
     } else {
