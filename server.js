@@ -48,7 +48,7 @@ app.get('/api/acft/person', function(req, res) {
             }
         });
     } else {
-        pool.query(`SELECT * FROM person`, (err, result) => {
+        pool.query(`SELECT * FROM person ORDER BY name`, (err, result) => {
             if (err) {
                 console.error(err);
                 res.status(500).send('Error reading person table');
