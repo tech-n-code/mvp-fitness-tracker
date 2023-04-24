@@ -24,7 +24,8 @@ export function scoreNumBased(gender, age, event, num) {
 }
 
 // console.log(scoreTimeBased("M", 38, "sdc", 2, 45)); //73
-// console.log(scoreTimeBased("M", 38, "sdc", 2, 45)); //73
+// console.log(scoreTimeBased("M", 40, "run", 13, 50)); //67
+// console.log(scoreTimeBased("F", 22, "plk", 3, 40)); //100
 
 export function scoreTimeBased(gender, age, event, min, sec) {
     const ageStr = ageToStrBracket(age);
@@ -35,10 +36,14 @@ export function scoreTimeBased(gender, age, event, min, sec) {
     if (eventVerbose === "2.5 mile walk" || eventVerbose === "12km bike" || eventVerbose === "1km swim" || eventVerbose === "5km row") {
         let rawScoreInSeconds = convertToSeconds(eventArray);
         return timeInSeconds <= rawScoreInSeconds ? "Go" : "No-Go";
-    } else if (eventVerbose === "plank") {
+    } else if (eventVerbose === "plank") {  //higher time is better, some "---" fields in table
         let counter = 0;
+        let highestRawScoreInSeconds = convertToSeconds(eventArray[eventArray.length-1].rawScore);
+        if (timeInSeconds > highestRawScoreInSeconds) {
+            return 100;
+        }
         for (let i = 0; i < eventArray.length; i++) {
-            if (eventArray[i].rawScore === "---") {
+            if (eventArray[i].rawScore === "---") {  //skip row but keep track w/counter
                 counter++;
                 continue;
             }
@@ -48,20 +53,22 @@ export function scoreTimeBased(gender, age, event, min, sec) {
             } else if (timeInSeconds > rawScoreInSeconds) {
                 counter = 0;
                 continue;
-            } else {
+            } else if (timeInSeconds < rawScoreInSeconds) {
                 return eventArray[i - (counter + 1)].score;
             }
         }
-    } else {
+    } else {  //lower time is better, no "---" fields in table
+        let lowestRawScoreInSeconds = convertToSeconds(eventArray[eventArray.length-1].rawScore);
+        if (timeInSeconds < lowestRawScoreInSeconds) {
+            return 100;
+        }
         for (let i = 0; i < eventArray.length; i++) {
             let rawScoreInSeconds = convertToSeconds(eventArray[i].rawScore);
             if (timeInSeconds === rawScoreInSeconds) {
                 return eventArray[i].score;
             } else if (timeInSeconds > rawScoreInSeconds) {
                 return eventArray[i - 1].score;
-            } //else if (i = eventArray.length - 1) {   NEEDS FIX for folks going above table socores
-            //     return 100;
-            // }
+            }
         }
     }
 }

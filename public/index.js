@@ -31,7 +31,7 @@ async function loadPersonsBtns(persons) {
             const btn = document.createElement("button");
             btn.id = `btn-${person.id}`;
             btn.dataset.id = person.id;
-            btn.classList.add("btn", "px-3", "position-relative", "btn-success");
+            btn.classList.add("btn", "px-3", "position-relative", "btn-secondary", "btn-sm");
             btn.type = "button";
             btn.innerHTML = `${person.name} <span id="btn-${person.id}-badge"></span>`
             btn.addEventListener("click", event => {
@@ -111,7 +111,7 @@ async function loadPersonCard(id) {
                                                 </div>
                                             <p class="mb-0 mt-3">Two-Mile Run (2MR): ${result.run.minutes}:${runSeconds} mins</p>
                                                 <div class="progress" role="progressbar" aria-label="run" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-                                                    <div class="progress-bar" style="width: ${result.runScore}%>${result.runScore} points</div>
+                                                    <div class="progress-bar" style="width: ${result.runScore}%">${result.runScore} points</div>
                                                 </div>
                                         </div>
                                     </div>
