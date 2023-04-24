@@ -16,6 +16,7 @@ async function fetchPersons() {
         const response = await fetch('/api/acft/person');
         const listOfPersons = await response.json();
         loadPersonsBtns(listOfPersons);
+        loadPersonCard(listOfPersons[0].id);
     } catch (error) {
         console.error(err);
     }
@@ -50,8 +51,6 @@ async function loadPersonsBtns(persons) {
     }
 }
 
-loadPersonCard(3);
-
 async function loadPersonCard(id) {
     try {
         fetch(`api/acft/test?personID=${id}`)
@@ -59,7 +58,6 @@ async function loadPersonCard(id) {
                 return response.json();
             })
             .then(person => {
-                console.log(person[0].name);
                 const gender = person[0].gender === "M" ? "Male" : "Female";
                 resultsContainer.innerHTML =
                     `<div id="card-${person[0].person_id}" class="card text-secondary-emphasis bg-secondary-subtle border border-secondary-subtle">
@@ -77,6 +75,7 @@ async function loadPersonCard(id) {
                     let sdcSeconds = formatSeconds(result.sdc.seconds);
                     let plkSeconds = formatSeconds(result.plk.seconds);
                     let runSeconds = formatSeconds(result.run.seconds);
+                    let totalScore = result.mdlScore + result.sptScore + result.hrpScore + result.sdcScore + result.plkScore + result.runScore;
                     const card = document.querySelector(`#card-${result.person_id}`);
                     card.innerHTML +=
                         `<div class="card-body">
@@ -84,7 +83,7 @@ async function loadPersonCard(id) {
                                 <div class="accordion-item">
                                     <h2 class="accordion-header">
                                         <button id="date-banner-${result.id}" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#result-${result.id}" aria-expanded="true" aria-controls="result-${result.id}">
-                                            Test date: ${formattedDate}
+                                            Test date: ${formattedDate}&nbsp;&nbsp;<span id="badge-${result.person_id}-score" class="badge rounded-pill text-bg-secondary">${totalScore} points</span>
                                         </button>
                                     </h2>
                                     <div id="result-${result.id}" class="accordion-collapse collapse">
@@ -130,7 +129,6 @@ async function loadPersonCard(id) {
 }
 
 function updateCurrencyColor(elementObj, dateString, smallDot = false) {
-    console.log(elementObj.id);
     const currentDate = new Date();
     const sixMonthsAgo = new Date(currentDate.getFullYear(), currentDate.getMonth() - 6, currentDate.getDate());
     const oneYearAgo = new Date(currentDate.getFullYear() - 1, currentDate.getMonth(), currentDate.getDate());
