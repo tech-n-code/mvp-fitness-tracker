@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS person CASCADE;
-DROP TABLE IF EXISTS test;
+DROP TABLE IF EXISTS acft;
 
 CREATE TABLE person (
     id SERIAL PRIMARY KEY,
@@ -8,8 +8,9 @@ CREATE TABLE person (
     age INT
 );
 
-CREATE TABLE test (
+CREATE TABLE acft (
     id SERIAL PRIMARY KEY,
+    age INT,
     mdl INT,
     spt NUMERIC(4,1),
     hrp INT,

@@ -1,28 +1,24 @@
-### All Persons
+### All Persons ordered by name
 GET http://localhost:3000/api/acft/person
 
 ### Person by ID
 GET http://localhost:3000/api/acft/person?id=3
 
-### Person by name
-GET http://localhost:3000/api/acft/person?name=Bob
+
 
 ### All tests
 GET http://localhost:3000/api/acft/test
 
-### Test by ID
-GET http://localhost:3000/api/acft/test?testID=3
+### ACFT by test ID
+GET http://localhost:3000/api/acft/test?id=4
 
-### All tests for person by ID
+### All tests for a person by person ID, ordered by test date descending
 GET http://localhost:3000/api/acft/test?personID=3
 
-
 ### Latest tests for person by ID
-GET http://localhost:3000/api/acft/test?personID=5&latest=true
+GET http://localhost:3000/api/acft/test?personID=3&latest=true
 
 
-### All tests for person by name
-GET http://localhost:3000/api/acft/test?name=Susan
 
 ### Create person
 POST http://localhost:3000/api/acft/person
@@ -34,57 +30,77 @@ Content-Type: application/json
     "age": 30
 }
 
-### Update person (all fields)
-PUT http://localhost:3000/api/acft/person/6
+### Update person by ID (all fields)
+PUT http://localhost:3000/api/acft/person/4
 Content-Type: application/json
 
 {
-    "name": "Anna",
-    "gender": "F",
-    "age": 37
+    "name": "Tom",
+    "gender": "M",
+    "age": 32
 }
 
-### Update person (individual field)
-PATCH http://localhost:3000/api/acft/person/2
+### Update person by ID (misc fields)
+PATCH http://localhost:3000/api/acft/person/4
 Content-Type: application/json
 
 {
-    "name": "Margarett"
+    "name": "Tim"
 }
 
 ### Delete person by id
-DELETE http://localhost:3000/api/acft/person/9
+DELETE http://localhost:3000/api/acft/person/4
+
+
 
 ### Create test
 POST http://localhost:3000/api/acft/test
 Content-Type: application/json
 
 {
-    "pushup_score": 65,
-    "situp_score": 56,
-    "date": "2023-04-10 09:45:00",
-    "person_id": 13
+    "age": 32,
+    "mdl": 220,
+    "spt": 7.7,
+    "hrp": 65,
+    "sdc": "02:15",
+    "plk": "02:45",
+    "run": "18:45",
+    "walk": null,
+    "bike": null,
+    "swim": null,
+    "kmrow": null,
+    "date": "2023-04-10",
+    "person_id": 6
 }
 
-### Update test by id
+### Update test by id (all fields)
 PUT http://localhost:3000/api/acft/test/6
 Content-Type: application/json
 
 {
-    "pushup_score": 65,
-    "situp_score": 56,
-    "date": "2023-04-10 09:45:00",
-    "person_id": 13
+    "age": 32,
+    "mdl": 220,
+    "spt": 7.7,
+    "hrp": 65,
+    "sdc": "02:15",
+    "plk": "02:45",
+    "run": "18:45",
+    "walk": null,
+    "bike": null,
+    "swim": null,
+    "kmrow": null,
+    "date": "2023-04-10",
+    "person_id": 4
 }
 
-### Update test (individual field)
-PATCH http://localhost:3000/api/acft/test/2
+### Update test by ID (misc fields)
+PATCH http://localhost:3000/api/acft/test/14
 Content-Type: application/json
 
 {
-    "hrp": 35
+    "hrp": 35,
+    "mdl": 230
 }
 
-
-### Delete test by id
-DELETE http://localhost:3000/api/acft/test/9
+### Delete test by ID
+DELETE http://localhost:3000/api/acft/test/11

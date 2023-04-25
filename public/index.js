@@ -44,7 +44,7 @@ async function loadUserBtn(id) {
         const span = document.querySelector(`#btn-${id}-badge`);
         const smallDot = true;
         let newUser = false;
-        if (result[0].test_id === null) {
+        if (result[0].acft_id === null) {
             newUser = true;
         }
         updateCurrencyColor(span, result[0].date, smallDot, newUser);
@@ -86,10 +86,10 @@ async function loadUserCard(id) {
                 return person;
             })
             .then(results => {
-                results.reverse();
+                // results.reverse();
                 let smallDot = false;
                 let newUser = false;
-                if (results[0].test_id === null) {
+                if (results[0].acft_id === null) {
                     newUser = true;
                     return;
                     //loadNewTestForm
