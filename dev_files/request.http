@@ -18,7 +18,7 @@ GET http://localhost:3000/api/acft/test?personID=3
 
 
 ### Latest tests for person by ID
-GET http://localhost:3000/api/acft/test?personID=3&latest=true
+GET http://localhost:3000/api/acft/test?personID=5&latest=true
 
 
 ### All tests for person by name
@@ -29,9 +29,9 @@ POST http://localhost:3000/api/acft/person
 Content-Type: application/json
 
 {
-    "name": "Suzan",
-    "gender": "F",
-    "age": 21
+    "name": "Tim",
+    "gender": "M",
+    "age": 30
 }
 
 ### Update person (all fields)

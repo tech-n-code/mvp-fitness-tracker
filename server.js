@@ -67,33 +67,37 @@ app.get('/api/acft/test', (req, res) => {
     console.log(req.query);
     if (req.query.personID && req.query.latest) {
         const id = req.query.personID;  //<- /api/acft/test?personID=2&latest=true;
-        pool.query(`SELECT * FROM person LEFT JOIN test ON person.id = test.person_id WHERE person.id = $1 ORDER BY test.date DESC LIMIT 1`, [id], function(err, result) {
+        pool.query(`SELECT person.id, person.name, person.gender, person.age, test.id as test_id, test.mdl, test.spt, test.hrp, test.sdc, test.plk, test.run, test.walk, test.bike, test.swim, test.kmrow, test.date, test.person_id FROM person LEFT JOIN test ON person.id = test.person_id WHERE person.id = $1 ORDER BY test.date DESC LIMIT 1`, [id], function(err, result) {
             if (err) {
                 console.error(err);
                 res.status(500).send('Error reading person-tests join table');
             } else if (result.rows.length === 0) {
-                console.log('No tests found');
-                res.status(404).send('No tests found');
+                console.log(`No tests found for person with id ${id}`);
+                res.status(404).send(`No tests found for person with id ${id}`);
             } else {
                 console.log(result.rows);
-                const resultsWithScores = insertScoresToJson(result.rows);  //beta middleware
-                console.log(`Returned ${resultsWithScores.length} records`);
-                res.json(resultsWithScores);
-                console.log(`Returned ${result.rows.length} records`);
-                // res.json(result.rows);
+                if (result.rows[0].person_id !== null) {
+                    console.log("entering 'if' statement");
+                    const resultsWithScores = insertScoresToJson(result.rows);  //beta middleware
+                    console.log(`Returned ${resultsWithScores.length} records for person with id ${id}`);
+                    res.json(resultsWithScores);
+                } else {
+                    res.json(result.rows);
+                    console.log(`Returned ${result.rows.length} records for person with id ${id}`);
+                }
             }
         });
     } else if (req.query.name) {
         const name = req.query.name;  //<- /api/acft/test?name=Kyle
-        pool.query(`SELECT * FROM person LEFT JOIN test ON person.id = test.person_id WHERE person.name = $1`, [name], function(err, result) {
+        pool.query(`SELECT person.id, person.name, person.gender, person.age, test.id as test_id, test.mdl, test.spt, test.hrp, test.sdc, test.plk, test.run, test.walk, test.bike, test.swim, test.kmrow, test.date, test.person_id FROM person LEFT JOIN test ON person.id = test.person_id WHERE person.name = $1`, [name], function(err, result) {
             if (err) {
                 console.error(err);
                 res.status(500).send('Error reading person-tests join table');
             } else if (result.rows.length === 0) {
-                console.log('No tests found');
-                res.status(404).send('No tests found');
+                console.log(`No tests found for person ${name}`);
+                res.status(404).send(`No tests found for person ${name}`);
             } else {
-                console.log(`Returned ${result.rows.length} records`);
+                console.log(`Returned ${result.rows.length} records for ${name}`);
                 res.json(result.rows);
             }
         });
@@ -113,20 +117,23 @@ app.get('/api/acft/test', (req, res) => {
         });
     } else if (req.query.personID) {  //<- /api/acft/test?personID=2
         const id = req.query.personID;
-        pool.query(`SELECT * FROM person LEFT JOIN test ON person.id = test.person_id WHERE person.id = $1`, [id], function(err, result) {
+        pool.query(`SELECT person.id, person.name, person.gender, person.age, test.id as test_id, test.mdl, test.spt, test.hrp, test.sdc, test.plk, test.run, test.walk, test.bike, test.swim, test.kmrow, test.date, test.person_id FROM person LEFT JOIN test ON person.id = test.person_id WHERE person.id = $1`, [id], function(err, result) {
             if (err) {
                 console.error(err);
                 res.status(500).send('Error reading person-tests join table');
             } else if (result.rows.length === 0) {
-                console.log('No tests found');
-                res.status(404).send('No tests found');
+                console.log(`No tests found for person with id ${id}`);
+                res.status(404).send(`No tests found for person with id ${id}`);
             } else {
-                console.log(result.rows);
-                const resultsWithScores = insertScoresToJson(result.rows);  //beta middleware
-                console.log(`Returned ${resultsWithScores.length} records`);
-                res.json(resultsWithScores);
-                console.log(`Returned ${result.rows.length} records`);
-                // res.json(result.rows);
+                if (result.rows[0].test_id !== null) {
+                    console.log("entering 'if' statement");
+                    const resultsWithScores = insertScoresToJson(result.rows);  //beta middleware
+                    console.log(`Returned ${resultsWithScores.length} records for person with id ${id}`);
+                    res.json(resultsWithScores);
+                } else {
+                    res.json(result.rows);
+                    console.log(`Returned ${result.rows.length} records for person with id ${id}`);
+                }
             }
         });
     } else {
@@ -147,14 +154,15 @@ app.get('/api/acft/test', (req, res) => {
 
 app.post('/api/acft/person', function(req, res) {
     const { name, gender, age } = req.body;
-    pool.query(`INSERT INTO person (name, gender, age) VALUES ($1, $2, $3)`, [name, gender, age], function(err, result) {
+    pool.query(`INSERT INTO person (name, gender, age) VALUES ($1, $2, $3) RETURNING *`, [name, gender, age], function(err, result) {
         if (err) {
             console.error(err);
-            res.status(500).send('Error creating person');
+            res.status(500).send('Error creating user');
         } else {
+            const id = result.rows[0].id;
             console.log(result.rows);
-            console.log("Person created successfully");
-            res.status(201).send("Person created successfully");
+            console.log(`User ${name} with id ${id} created successfully`);
+            res.status(201).json(user);
         }
     })
 })
@@ -193,14 +201,14 @@ app.patch('/api/acft/person/:id', function(req, res) {
 
 app.delete('/api/acft/person/:id', function(req, res) {
     const id = req.params.id;
-    pool.query('DELETE FROM person WHERE id = $1', [id], function(err, result) {
+    pool.query('DELETE FROM person WHERE id = $1 RETURNING *', [id], function(err, result) {
         if (err) {
             console.error(err);
             res.status(500).send("Error deleting person");
         } else {
             console.log(result.rows);
-            console.log("Person deleted successfully");
-            res.status(204).send("Person deleted successfully");
+            console.log(`Person withdeleted successfully`);
+            res.status(204).send(`Person deleted successfully`);
         }
     });
 });
