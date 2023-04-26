@@ -23,14 +23,15 @@ async function loadUserBtn(id) {
         const result = await fetch(`/api/acft/test?personID=${id}&latest=true`)
             .then(response => response.json());
         const btn = document.createElement("button");
-        btn.id = `btn-${id}`;
+        btn.id = `btn-${result[0].id}`;
         btn.dataset.id = id;
         btn.classList.add("btn", "px-3", "my-1", "position-relative", "btn-secondary");
         btn.type = "button";
-        btn.innerHTML = `${result[0].name} <span id="btn-${id}-badge"></span>`
+        btn.innerHTML = `${result[0].name} <span id="btn-${result[0].id}-badge"></span>`
         btn.addEventListener("click", event => {
             resultsContainer.innerHTML = '';
             loadUserCard(id);
+            console.log(`Clicked on ${result[0].name} with id ${result[0].id}`)
         });
         usersContainer.appendChild(btn);
         const span = document.querySelector(`#btn-${id}-badge`);
@@ -75,6 +76,17 @@ async function loadUserCard(id) {
                             </div>
                         </div>
                     </div>`
+                
+                const editBtn = document.querySelector(`#btn-edit-${person[0].id}`);
+                editBtn.addEventListener("click", event => {
+                    //need edit routine
+                });
+                const deleteBtn = document.querySelector(`#btn-del-${person[0].id}`);
+                deleteBtn.addEventListener("click", event => {
+                    console.log(`Delete btn for ${person[0].id} pressed`)
+                    deleteUser(person[0].id);
+                });
+
                 return person;
             })
             .then(results => {
@@ -141,16 +153,6 @@ async function loadUserCard(id) {
                 testCardHeadder.classList.remove("collapsed");
                 const testCardResults = document.querySelector(`#result-${results[0].acft_id}`);
                 testCardResults.classList.add("show");
-                const editBtn = document.querySelector(`#btn-edit-${results[0].id}`);
-                editBtn.addEventListener("click", event => {
-                    
-                });
-                const deleteBtn = document.querySelector(`#btn-del-${results[0].id}`);
-                deleteBtn.addEventListener("click", event => {
-                    console.log(`Delete btn for ${results[0].id} pressed`)
-                    deleteUser(results[0].id);
-                });
-
         })
     } catch (error) {
         console.error(error);
@@ -183,12 +185,7 @@ async function createNewUser(name, age, gender) {
             throw new Error(`HTTP error! status: ${response.status}`)
         } else {
             let user = await response.json();
-            const gender = user.gender === "M" ? "Male" : "Female";
-            resultsContainer.innerHTML =
-                `<div id="card-${user.id}" class="card text-secondary-emphasis bg-secondary-subtle border border-secondary-subtle">
-                    <div class="card-header">${user.name} (${user.age} yrs old ${gender})
-                    <span id="badge-${user.id}"></span></div>
-                </div>`
+            loadUserBtn(user[0].id);
         }
     } catch (err) {
         console.error(err);
@@ -265,34 +262,6 @@ function formatSeconds(seconds) {
     }
     return seconds;
 }
-
-// createPerson("Ted", "M", 32);
-
-// async function createPerson(name, gender, age) {
-//     let payload = JSON.stringify({
-//         name: name,
-//         gender: gender,
-//         age: age 
-//     });
-//     let jsonHeaders = new Headers({
-//         "Content-Type": "application/json"
-//     });
-//     try {
-//         let response = await fetch(`/api/acft/person`, {  // ${rootURL}
-//             method: "POST",
-//             body: payload,
-//             headers: jsonHeaders
-//         });
-//         if (!response.ok) {
-//             throw new Error(`HTTP error! status: ${response.status}`)
-//         } else {
-//             let message = await response.text();
-//             console.log(message);
-//         }
-//     } catch (err) {
-//         console.error(err);
-//     }
-// }
 
 // updatePerson(10, "Kyle", "F", 45);
 
@@ -380,11 +349,41 @@ async function updateTest(id, pushup_score, situp_score, date, person_id) {
     }
 }
 
-const ageRange = document.getElementById('user-age');
-const ageOutput = document.getElementById('age-scroll-output');
-ageRange.addEventListener('input', function() {
-    ageOutput.innerHTML = ageRange.value;
+const ageModalInput = document.getElementById('user-age');
+const ageModalScroll = document.getElementById('age-scroll-output');
+ageModalInput.addEventListener('input', function() {
+    ageModalScroll.innerHTML = ageModalInput.value;
 });
+
+const btnModalSave = document.getElementById("btn-modal-save");
+btnModalSave.addEventListener("click", event => {
+    const form = document.querySelector(".modal-body form");
+    const nameInput = form.querySelector("#user-name");
+    const ageInput = form.querySelector("#user-age");
+    const genderInput = form.querySelector("#user-gender");
+    const name = nameInput.value;
+    const age = ageInput.value;
+    const gender = genderInput.value;
+    createNewUser(name, age, gender);
+    // form.reset();
+    document.getElementById("btn-modal-close-2").click();
+})
+
+const btnModalClose1 = document.getElementById("btn-modal-close-1");
+btnModalClose1.addEventListener("click", event => {
+    ageModalInput.value = ageModalInput.defaultValue;
+    ageModalScroll.innerHTML = ageModalInput.value;
+    const form = document.querySelector(".modal-body form");
+    form.reset();
+})
+
+const btnModalClose2 = document.getElementById("btn-modal-close-2");
+btnModalClose2.addEventListener("click", event => {
+    ageModalInput.value = ageModalInput.defaultValue;
+    ageModalScroll.innerHTML = ageModalInput.value;
+    const form = document.querySelector(".modal-body form");
+    form.reset();
+})
 
 darkModeSwitch.addEventListener("change", (event) => {
     if (event.target.checked) {
