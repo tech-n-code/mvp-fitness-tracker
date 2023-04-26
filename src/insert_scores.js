@@ -4,7 +4,7 @@ export function insertScoresToJson(results) {
     for (let i = 0; i < results.length; i++) {
         let scores = {};
         let gender = results[i].gender;
-        let age = results[i].age;
+        let age = results[i].acft_age;
         let event = "mdl";
         let num = results[i].mdl;
         let mdlScore = scoreNumBased(gender, age, event, num);

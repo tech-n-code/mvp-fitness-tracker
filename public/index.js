@@ -1,15 +1,7 @@
 const usersContainer = document.querySelector("#users_container");
 const resultsContainer = document.querySelector("#results_container");
 const darkModeSwitch = document.querySelector("#darkMode");
-darkModeSwitch.addEventListener("change", (event) => {
-    if (event.target.checked) {
-        const htmlTag = document.querySelector('html');
-        htmlTag.setAttribute('data-bs-theme', 'dark');
-    } else {
-        const htmlTag = document.querySelector('html');
-        htmlTag.removeAttribute('data-bs-theme');
-    }
-});
+
 
 async function fetchUsers() {
     try {
@@ -47,7 +39,7 @@ async function loadUserBtn(id) {
         if (result[0].acft_id === null) {
             newUser = true;
         }
-        updateCurrencyColor(span, result[0].date, smallDot, newUser);
+        updateTestStatusColor(span, result[0].date, smallDot, newUser);
         btn.appendChild(span);
     } catch (error) {
         console.error(error);
@@ -96,7 +88,7 @@ async function loadUserCard(id) {
                 }
                 
                 const testStatusBadge = document.querySelector(`#badge-${results[0].id}`);
-                updateCurrencyColor(testStatusBadge, results[0].date, smallDot, newUser);
+                updateTestStatusColor(testStatusBadge, results[0].date, smallDot, newUser);
                 results.forEach(result => {
                     let formattedDate = formatDate(result.date);
                     let sdcSeconds = formatSeconds(result.sdc.seconds);
@@ -109,11 +101,11 @@ async function loadUserCard(id) {
                             <div class="accordion">
                                 <div class="accordion-item">
                                     <h2 class="accordion-header">
-                                        <button id="date-banner-${result.test_id}" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#result-${result.test_id}" aria-expanded="true" aria-controls="result-${result.test_id}">
-                                            Test date: ${formattedDate}&nbsp;&nbsp;<span id="badge-${result.test_id}-score" class="badge rounded-pill text-bg-secondary">${totalScore} points</span>
+                                        <button id="date-banner-${result.acft_id}" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#result-${result.acft_id}" aria-expanded="true" aria-controls="result-${result.acft_id}">
+                                            Test date: ${formattedDate}&nbsp;&nbsp;<span id="badge-${result.acft_id}-score" class="badge rounded-pill text-bg-secondary">${totalScore} points</span>
                                         </button>
                                     </h2>
-                                    <div id="result-${result.test_id}" class="accordion-collapse collapse">
+                                    <div id="result-${result.acft_id}" class="accordion-collapse collapse">
                                         <div class="accordion-body">
                                             <p class="mb-0">Max Deadlift (MDL): ${result.mdl} lbs</p>
                                                 <div class="progress" role="progressbar" aria-label="mdl" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
@@ -145,16 +137,15 @@ async function loadUserCard(id) {
                             </div>
                         </div>`
                 });
-                const testCardHeadder = document.querySelector(`#date-banner-${results[0].test_id}`);
+                const testCardHeadder = document.querySelector(`#date-banner-${results[0].acft_id}`);
                 testCardHeadder.classList.remove("collapsed");
-                const testCardResults = document.querySelector(`#result-${results[0].test_id}`);
+                const testCardResults = document.querySelector(`#result-${results[0].acft_id}`);
                 testCardResults.classList.add("show");
                 const editBtn = document.querySelector(`#btn-edit-${results[0].id}`);
                 editBtn.addEventListener("click", event => {
                     
                 });
                 const deleteBtn = document.querySelector(`#btn-del-${results[0].id}`);
-                console.log(deleteBtn);
                 deleteBtn.addEventListener("click", event => {
                     console.log(`Delete btn for ${results[0].id} pressed`)
                     deleteUser(results[0].id);
@@ -209,14 +200,20 @@ async function deleteUser(id) {
         const response = await fetch(`/api/acft/person/${id}`, {
             method: 'DELETE',
         });
-        const data = await response.json();
-        console.log(data);
+        console.log(response.status);
+        const card = document.querySelector(`#card-${id}`);
+        card.remove();
+        const btn = document.querySelector(`#btn-${id}`);
+        btn.remove();
+        const firstChild = usersContainer.children[0];
+        const dataId = firstChild.getAttribute("data-id");
+        loadUserCard(dataId);
     } catch (err) {
         console.error(err);
     }
 }
 
-function updateCurrencyColor(elementObj, dateString, smallDot = false, newUser = false) {
+function updateTestStatusColor(elementObj, dateString, smallDot = false, newUser = false) {
     const currentDate = new Date();
     const sixMonthsAgo = new Date(currentDate.getFullYear(), currentDate.getMonth() - 6, currentDate.getDate());
     const oneYearAgo = new Date(currentDate.getFullYear() - 1, currentDate.getMonth(), currentDate.getDate());
@@ -387,4 +384,14 @@ const ageRange = document.getElementById('user-age');
 const ageOutput = document.getElementById('age-scroll-output');
 ageRange.addEventListener('input', function() {
     ageOutput.innerHTML = ageRange.value;
+});
+
+darkModeSwitch.addEventListener("change", (event) => {
+    if (event.target.checked) {
+        const htmlTag = document.querySelector('html');
+        htmlTag.setAttribute('data-bs-theme', 'dark');
+    } else {
+        const htmlTag = document.querySelector('html');
+        htmlTag.removeAttribute('data-bs-theme');
+    }
 });

@@ -56,7 +56,7 @@ app.get('/api/acft/test', (req, res) => {
     /* Latest test for person by ID */
     if (req.query.personID && req.query.latest) {
         const id = req.query.personID;  //<- /api/acft/test?personID=2&latest=true;
-        pool.query(`SELECT person.id, person.name, person.gender, person.age, acft.id as acft_id, acft.age, acft.mdl, acft.spt, acft.hrp, acft.sdc, acft.plk, acft.run, acft.walk, acft.bike, acft.swim, acft.kmrow, acft.date, acft.person_id FROM person LEFT JOIN acft ON person.id = acft.person_id WHERE person.id = $1 ORDER BY acft.date DESC LIMIT 1`, [id], function(err, result) {
+        pool.query(`SELECT person.id, person.name, person.gender, person.age, acft.id as acft_id, acft.age as acft_age, acft.mdl, acft.spt, acft.hrp, acft.sdc, acft.plk, acft.run, acft.walk, acft.bike, acft.swim, acft.kmrow, acft.date, acft.person_id FROM person LEFT JOIN acft ON person.id = acft.person_id WHERE person.id = $1 ORDER BY acft.date DESC LIMIT 1`, [id], function(err, result) {
             if (err) {
                 console.error(err);
                 res.status(500).send('Error reading person-acft join table');
@@ -94,7 +94,7 @@ app.get('/api/acft/test', (req, res) => {
     /* All tests for person by ID */
     } else if (req.query.personID) {  //<- /api/acft/test?personID=2
         const id = req.query.personID;
-        pool.query(`SELECT person.id, person.name, person.gender, person.age, acft.id as acft_id, acft.mdl, acft.spt, acft.hrp, acft.sdc, acft.plk, acft.run, acft.walk, acft.bike, acft.swim, acft.kmrow, acft.date, acft.person_id FROM person LEFT JOIN acft ON person.id = acft.person_id WHERE person.id = $1 ORDER BY acft.date DESC`, [id], function(err, result) {
+        pool.query(`SELECT person.id, person.name, person.gender, person.age, acft.id as acft_id, acft.age as acft_age, acft.mdl, acft.spt, acft.hrp, acft.sdc, acft.plk, acft.run, acft.walk, acft.bike, acft.swim, acft.kmrow, acft.date, acft.person_id FROM person LEFT JOIN acft ON person.id = acft.person_id WHERE person.id = $1 ORDER BY acft.date DESC`, [id], function(err, result) {
             if (err) {
                 console.error(err);
                 res.status(500).send('Error reading person-acft join table');
@@ -191,7 +191,7 @@ app.delete('/api/acft/person/:id', function(req, res) {
         } else {
             console.log(result.rows);
             console.log(`Person with id ${result.rows[0].id} deleted successfully`);
-            res.status(204).json(result.rows);
+            res.status(200).json(result.rows);
         }
     });
 });
