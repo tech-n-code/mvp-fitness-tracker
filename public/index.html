@@ -40,7 +40,7 @@
                 <h1 class="modal-title fs-5" id="userFormTitle">User</h1>
                 <button id="btn-modal-close-1" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div id="user-modal-body" class="modal-body">
                     <form class="row">
                         <div class="col-12 mb-3">
                             <input id="user-name" type="text" class="form-control" placeholder="User">
@@ -61,6 +61,52 @@
                 <div class="modal-footer">
                     <button id="btn-modal-close-2" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button id="btn-modal-save" type="button" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="newACFTmodal" tabindex="-1" aria-labelledby="acftFormTitle" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h1 class="modal-title fs-5" id="acftFormTitle">ACFT</h1>
+                <button id="btn-modal2-close-1" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div id="acft-modal-body" class="modal-body">
+                    <form class="row">
+                        <div class="col-12 mb-3">
+                            <label for="mdl" class="form-label">Max Deadlift (MDL)</label>
+                            <input id="mdl" type="text" class="form-control">
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="spt" class="form-label">Standing Power Throw (SPT)</label>
+                            <input id="spt" type="text" class="form-control">
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="hrp" class="form-label">Hand Release Push-ups (HRP)</label>
+                            <input id="hrp" type="text" class="form-control">
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="sdc" class="form-label">Spint-Drag-Carry (SDC)</label>
+                            <input id="sdc" type="text" class="form-control">
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="plk" class="form-label">Plank (PLK)</label>
+                            <input id="plk" type="text" class="form-control">
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="run" class="form-label">Two-Mile Run (2MR)</label>
+                            <input id="run" type="text" class="form-control">
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="date" class="form-label">ACFT Date</label>
+                            <input id="date" type="text" class="form-control">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="btn-modal2-close-2" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id="btn-modal2-save" type="button" class="btn btn-primary">Save</button>
                 </div>
             </div>
         </div>

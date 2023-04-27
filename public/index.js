@@ -11,7 +11,7 @@ async function fetchUsers() {
             loadUserBtn(user.id)
         }
         loadUserCard(users[0].id);
-    } catch (error) {
+    } catch (err) {
         console.error(err);
     }
 }
@@ -42,8 +42,8 @@ async function loadUserBtn(id) {
         }
         updateTestStatusColor(span, result[0].date, smallDot, newUser);
         btn.appendChild(span);
-    } catch (error) {
-        console.error(error);
+    } catch (err) {
+        console.error(err);
     }
 }
 
@@ -78,19 +78,43 @@ async function loadUserCard(id) {
                         </div>
                     </div>`
                 
+                const newACFTbtn = document.getElementById(`btn-new-acft-${person[0].id}`)
+                newACFTbtn.setAttribute("data-bs-toggle", "modal");
+                newACFTbtn.setAttribute("data-bs-target", "#newACFTmodal");
+                
+                const btnACFTmodalSave = document.getElementById("btn-modal2-save");
+                btnACFTmodalSave.dataset.id = person[0].id;
+                btnACFTmodalSave.dataset.age = person[0].age;
+
                 const editBtn = document.querySelector(`#btn-edit-${person[0].id}`);
-                editBtn.addEventListener("click", event => {
-                    //need edit routine
-                });
-                const deleteBtn = document.querySelector(`#btn-del-${person[0].id}`);
+                editBtn.setAttribute("data-bs-toggle", "modal");
+                editBtn.setAttribute("data-bs-target", "#newUserModal");
+
+                const btnUserModalSave = document.getElementById("btn-modal-save");
+                btnUserModalSave.dataset.id = person[0].id;
+                btnUserModalSave.dataset.age = person[0].age;
+                
+                const deleteBtn = document.querySelector(`#btn-del-${person[0].id}`);  // NEEDS FIX
                 deleteBtn.addEventListener("click", event => {
-                    console.log(`Delete btn for ${person[0].id} pressed`)
+                    console.log(`Delete btn for ${person[0].id} pressed`)  //dev tool
                     deleteUser(person[0].id);
                 });
 
-                return person;
+                loadUserResults(person[0].id)
+            });      
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+async function loadUserResults(id) {
+    try {
+        fetch(`api/acft/test?personID=${id}`)
+            .then(response => {
+                return response.json();
             })
             .then(results => {
+
                 let smallDot = false;
                 let newUser = false;
                 if (results[0].acft_id === null) {
@@ -155,9 +179,10 @@ async function loadUserCard(id) {
                 firstTestCardHeadder.classList.remove("collapsed");
                 const firstTestCardResults = document.querySelector(`#result-${results[0].acft_id}`);
                 firstTestCardResults.classList.add("show");
-        })
-    } catch (error) {
-        console.error(error);
+
+            });
+    } catch (err) {
+        console.error(err);
     }
 }
 
@@ -185,19 +210,17 @@ function newUserForm() {
 
 }
 
-// createNewUser("Tom", 30, "M");
-
 async function createNewUser(name, age, gender) {
-    let payload = JSON.stringify({
+    const payload = JSON.stringify({
         name: name,
         gender: gender,
         age: age 
     });
-    let jsonHeaders = new Headers({
+    const jsonHeaders = new Headers({
         "Content-Type": "application/json"
     });
     try {
-        let response = await fetch(`/api/acft/person`, {
+        const response = await fetch(`/api/acft/person`, {
             method: "POST",
             body: payload,
             headers: jsonHeaders
@@ -205,7 +228,7 @@ async function createNewUser(name, age, gender) {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`)
         } else {
-            let user = await response.json();
+            const user = await response.json();
             loadUserBtn(user[0].id);
         }
     } catch (err) {
@@ -218,7 +241,6 @@ async function deleteUser(id) {
         const response = await fetch(`/api/acft/person/${id}`, {
             method: 'DELETE',
         });
-        console.log(response.status);
         const card = document.querySelector(`#card-${id}`);
         card.remove();
         const btn = document.querySelector(`#btn-${id}`);
@@ -268,17 +290,17 @@ function updateTestStatusColor(elementObj, dateString, smallDot = false, newUser
 }
 
 function formatDate(resultDate) {
-    let date = new Date(resultDate);
-    let day = date.getDate();
-    let month = date.toLocaleString("default", { month: 'long' });
-    let year = date.getFullYear();
-    let formattedDate = `${day} ${month} ${year}`;
+    const date = new Date(resultDate);
+    const day = date.getDate();
+    const month = date.toLocaleString("default", { month: 'long' });
+    const year = date.getFullYear();
+    const formattedDate = `${day} ${month} ${year}`;
     return formattedDate;
 }
 
 function formatSeconds(seconds) {
     if (seconds < 10) {
-        let twoDigitSeconds = `0${seconds}`;
+        const twoDigitSeconds = `0${seconds}`;
         return twoDigitSeconds;
     }
     return seconds;
@@ -287,16 +309,16 @@ function formatSeconds(seconds) {
 // updatePerson(10, "Kyle", "F", 45);
 
 async function updatePerson(id, name, gender, age) {
-    let payload = JSON.stringify({
+    const payload = JSON.stringify({
         name: name,
         gender: gender,
         age: age 
     });
-    let jsonHeaders = new Headers({
+    const jsonHeaders = new Headers({
         "Content-Type": "application/json"
     });
     try {
-        let response = await fetch(`/api/acft/person/${id}`, {  // ${rootURL}
+        const response = await fetch(`/api/acft/person/${id}`, {  // ${rootURL}
             method: "PUT",
             body: payload,
             headers: jsonHeaders
@@ -314,18 +336,36 @@ async function updatePerson(id, name, gender, age) {
 
 // createTest(70, 64, "2023-03-16 08:45:00", 10);
 
-async function createTest(pushup_score, situp_score, date, person_id) {
-    let payload = JSON.stringify({
-        pushup_score: pushup_score,
-        situp_score: situp_score,
-        date: date,
+async function createNewTest(age, person_id) {
+    const form = document.querySelector("#acft-modal-body form");
+    const mdlInput = form.querySelector("#mdl");
+    const sptInput = form.querySelector("#spt");
+    const hrpInput = form.querySelector("#hrp");
+    const sdcInput = form.querySelector("#sdc");
+    const plkInput = form.querySelector("#plk");
+    const runInput = form.querySelector("#run");
+    const dateInput = form.querySelector("#date");
+    const payload = JSON.stringify({
+        age: age,
+        mdl: mdlInput.value,
+        spt: sptInput.value,
+        hrp: hrpInput.value,
+        sdc: sdcInput.value,
+        plk: plkInput.value,
+        run: runInput.value,
+        walk: null,
+        nike: null,
+        swim: null,
+        kmrow: null,
+        date: dateInput.value,
         person_id: person_id
     });
-    let jsonHeaders = new Headers({
+    console.log(payload);  //dev tool
+    const jsonHeaders = new Headers({
         "Content-Type": "application/json"
     });
     try {
-        let response = await fetch(`/api/acft/test`, {  // ${rootURL}
+        const response = await fetch(`/api/acft/test`, {
             method: "POST",
             body: payload,
             headers: jsonHeaders
@@ -333,7 +373,8 @@ async function createTest(pushup_score, situp_score, date, person_id) {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`)
         } else {
-            let message = await response.text();
+            const message = await response.json();
+            loadUserCard(person_id);
             console.log(message);
         }
     } catch (err) {
@@ -341,20 +382,21 @@ async function createTest(pushup_score, situp_score, date, person_id) {
     }
 }
 
+
 // updateTest(12, 71, 64, "2023-03-16 08:45:00", 10);
 
 async function updateTest(id, pushup_score, situp_score, date, person_id) {
-    let payload = JSON.stringify({
+    const payload = JSON.stringify({
         pushup_score: pushup_score,
         situp_score: situp_score,
         date: date,
         person_id: person_id
     });
-    let jsonHeaders = new Headers({
+    const jsonHeaders = new Headers({
         "Content-Type": "application/json"
     });
     try {
-        let response = await fetch(`/api/acft/test/${id}`, {  // ${rootURL}
+        const response = await fetch(`/api/acft/test/${id}`, {  // ${rootURL}
             method: "PUT",
             body: payload,
             headers: jsonHeaders
@@ -362,7 +404,7 @@ async function updateTest(id, pushup_score, situp_score, date, person_id) {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`)
         } else {
-            let message = await response.text();
+            const message = await response.text();
             console.log(message);
         }
     } catch (err) {
@@ -370,15 +412,16 @@ async function updateTest(id, pushup_score, situp_score, date, person_id) {
     }
 }
 
+/* Synch the age input and scroll elements */
 const ageModalInput = document.getElementById('user-age');
 const ageModalScroll = document.getElementById('age-scroll-output');
 ageModalInput.addEventListener('input', function() {
     ageModalScroll.innerHTML = ageModalInput.value;
 });
 
-const btnModalSave = document.getElementById("btn-modal-save");
-btnModalSave.addEventListener("click", event => {
-    const form = document.querySelector(".modal-body form");
+const btnUserModalSave = document.getElementById("btn-modal-save");
+btnUserModalSave.addEventListener("click", event => {
+    const form = document.querySelector("#user-modal-body form");
     const nameInput = form.querySelector("#user-name");
     const ageInput = form.querySelector("#user-age");
     const genderInput = form.querySelector("#user-gender");
@@ -389,11 +432,19 @@ btnModalSave.addEventListener("click", event => {
     document.getElementById("btn-modal-close-2").click();
 })
 
+const btnACFTmodalSave = document.getElementById("btn-modal2-save");
+btnACFTmodalSave.addEventListener("click", event => {
+    const age = btnACFTmodalSave.dataset.age;
+    const id = btnACFTmodalSave.dataset.id;
+    createNewTest(age, id);
+    document.getElementById("btn-modal2-close-2").click();
+})
+
 const btnModalClose1 = document.getElementById("btn-modal-close-1");
 btnModalClose1.addEventListener("click", event => {
     ageModalInput.value = ageModalInput.defaultValue;
     ageModalScroll.innerHTML = ageModalInput.value;
-    const form = document.querySelector(".modal-body form");
+    const form = document.querySelector("#user-modal-body form");
     form.reset();
 })
 
@@ -401,7 +452,19 @@ const btnModalClose2 = document.getElementById("btn-modal-close-2");
 btnModalClose2.addEventListener("click", event => {
     ageModalInput.value = ageModalInput.defaultValue;
     ageModalScroll.innerHTML = ageModalInput.value;
-    const form = document.querySelector(".modal-body form");
+    const form = document.querySelector("#user-modal-body form");
+    form.reset();
+})
+
+const btnModal2Close1 = document.getElementById("btn-modal2-close-1");
+btnModal2Close1.addEventListener("click", event => {
+    const form = document.querySelector("#acft-modal-body form");
+    form.reset();
+})
+
+const btnModal2Close2 = document.getElementById("btn-modal2-close-2");
+btnModal2Close2.addEventListener("click", event => {
+    const form = document.querySelector("#acft-modal-body form");
     form.reset();
 })
 
