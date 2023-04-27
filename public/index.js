@@ -22,26 +22,26 @@ async function loadUserBtn(id) {
     try {
         const result = await fetch(`/api/acft/test?personID=${id}&latest=true`)
             .then(response => response.json());
-        const btn = document.createElement("button");
-        btn.id = `btn-${result[0].id}`;
-        btn.dataset.id = id;
-        btn.classList.add("btn", "px-3", "my-1", "position-relative", "btn-secondary", "text-wrap", "text-break");
-        btn.type = "button";
-        btn.innerHTML = `${result[0].name} <span id="btn-${result[0].id}-badge"></span>`
-        btn.addEventListener("click", event => {
-            resultsContainer.innerHTML = '';
-            loadUserCard(id);
-            console.log(`Clicked on ${result[0].name} with id ${result[0].id}`)  //dev tool
-        });
-        usersContainer.appendChild(btn);
-        const span = document.querySelector(`#btn-${id}-badge`);
-        const smallDot = true;
-        let newUser = false;
-        if (result[0].acft_id === null) {
-            newUser = true;
-        }
-        updateTestStatusColor(span, result[0].date, smallDot, newUser);
-        btn.appendChild(span);
+                const btn = document.createElement("button");
+                btn.id = `btn-${result[0].id}`;
+                btn.dataset.id = id;
+                btn.classList.add("btn", "px-3", "my-1", "position-relative", "btn-secondary", "text-wrap", "text-break");
+                btn.type = "button";
+                btn.innerHTML = `${result[0].name} <span id="btn-${result[0].id}-badge"></span>`
+                btn.addEventListener("click", event => {
+                    resultsContainer.innerHTML = '';
+                    loadUserCard(id);
+                    console.log(`Clicked on ${result[0].name} with id ${result[0].id}`)  //dev tool
+                });
+                usersContainer.appendChild(btn);
+                const span = document.querySelector(`#btn-${id}-badge`);
+                const smallDot = true;
+                let newUser = false;
+                if (result[0].acft_id === null) {
+                    newUser = true;
+                }
+                updateTestStatusColor(span, result[0].date, smallDot, newUser);
+                btn.appendChild(span);
     } catch (err) {
         console.error(err);
     }
@@ -211,10 +211,6 @@ function passFailTestBarColoring(acft_id) {
     } 
 }
 
-function newUserForm() {
-
-}
-
 async function createNewUser(name, age, gender) {
     const payload = JSON.stringify({
         name: name,
@@ -314,26 +310,30 @@ function formatSeconds(seconds) {
 
 // updatePerson(10, "Kyle", "F", 45);
 
-async function updatePerson(id, name, gender, age) {
+async function updateUser(id, name, age) {
     const payload = JSON.stringify({
         name: name,
-        gender: gender,
         age: age 
     });
     const jsonHeaders = new Headers({
         "Content-Type": "application/json"
     });
     try {
-        const response = await fetch(`/api/acft/person/${id}`, {  // ${rootURL}
-            method: "PUT",
+        const response = await fetch(`/api/acft/person/${id}`, {
+            method: "PATCH",
             body: payload,
             headers: jsonHeaders
         });
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`)
         } else {
-            let message = await response.text();
-            console.log(message);
+            let user = await response.json();
+            console.log(user[0].id);  // dev tool
+            const userBtn = document.querySelector(`#btn-${user[0].id}`);
+            userBtn.remove();
+            loadUserBtn(user[0].id);
+            resultsContainer.innerHTML = '';
+            loadUserCard(user[0].id);
         }
     } catch (err) {
         console.error(err);
@@ -462,6 +462,19 @@ editUserModal.addEventListener("shown.bs.modal", event => {
     editUserName.setAttribute("placeholder", editBtn.dataset.name);
     editAgeModalInput.value = editBtn.dataset.age;
     editAgeModalScroll.innerHTML = editBtn.dataset.age;
+})
+
+const btnEditUserModalSave = document.getElementById("btn-modal2-edit-save");
+btnEditUserModalSave.addEventListener("click", event => {
+    const editBtn = document.querySelector('[id^="btn-edit-"]');
+    const form = document.querySelector("#edit-user-modal-body form");
+    const nameInput = form.querySelector("#edit-user-name");
+    const ageInput = form.querySelector("#edit-user-age");
+    const id = editBtn.dataset.id;
+    const name = nameInput.value;
+    const age = ageInput.value;
+    updateUser(id, name, age);
+    document.getElementById("btn-modal2-close-2").click();
 })
 
 const btnDeleteModalConfirm = document.getElementById("btn-modal4-confirm");
