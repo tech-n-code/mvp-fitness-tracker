@@ -13,4 +13,4 @@ INSERT INTO acft (age, mdl, spt, hrp, sdc, plk, run, walk, bike, swim, kmrow, da
 INSERT INTO acft (age, mdl, spt, hrp, sdc, plk, run, walk, bike, swim, kmrow, date, person_id) VALUES (37, 160, 9.2, 27, '02:35', '02:05', '19:05', NULL, NULL, NULL, NULL, '2020-05-12', 3);
 INSERT INTO acft (age, mdl, spt, hrp, sdc, plk, run, walk, bike, swim, kmrow, date, person_id) VALUES (38, 170, 9.6, 31, '02:40', '02:10', '19:10', NULL, NULL, NULL, NULL, '2021-07-22', 3);
 INSERT INTO acft (age, mdl, spt, hrp, sdc, plk, run, walk, bike, swim, kmrow, date, person_id) VALUES (39, 160, 9.1, 22, '02:55', '01:59', '19:55', NULL, NULL, NULL, NULL, '2022-08-11', 3);
-INSERT INTO acft (age, mdl, spt, hrp, sdc, plk, run, walk, bike, swim, kmrow, date, person_id) VALUES (40, 180, 9.7, 33, '02:42', '02:25', '19:35', NULL, NULL, NULL, NULL, '2023-03-16', 3);
+INSERT INTO acft (age, mdl, spt, hrp, sdc, plk, run, walk, bike, swim, kmrow, date, person_id) VALUES (40, 180, 9.7, 33, '02:36', '02:25', '19:35', NULL, NULL, NULL, NULL, '2023-03-16', 3);

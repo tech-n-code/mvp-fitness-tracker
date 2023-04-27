@@ -13,7 +13,7 @@ GET http://localhost:3000/api/acft/test
 GET http://localhost:3000/api/acft/test?id=4
 
 ### All tests for a person by person ID, ordered by test date descending
-GET http://localhost:3000/api/acft/test?personID=6
+GET http://localhost:3000/api/acft/test?personID=3
 
 ### Latest tests for person by ID
 GET http://localhost:3000/api/acft/test?personID=3&latest=true

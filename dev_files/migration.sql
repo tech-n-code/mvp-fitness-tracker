@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS acft;
 
 CREATE TABLE person (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(20),
+    name VARCHAR(25),
     gender CHAR(1),
     age INT
 );

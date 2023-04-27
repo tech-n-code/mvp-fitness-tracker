@@ -25,13 +25,13 @@ async function loadUserBtn(id) {
         const btn = document.createElement("button");
         btn.id = `btn-${result[0].id}`;
         btn.dataset.id = id;
-        btn.classList.add("btn", "px-3", "my-1", "position-relative", "btn-secondary");
+        btn.classList.add("btn", "px-3", "my-1", "position-relative", "btn-secondary", "text-wrap", "text-break");
         btn.type = "button";
         btn.innerHTML = `${result[0].name} <span id="btn-${result[0].id}-badge"></span>`
         btn.addEventListener("click", event => {
             resultsContainer.innerHTML = '';
             loadUserCard(id);
-            console.log(`Clicked on ${result[0].name} with id ${result[0].id}`)
+            console.log(`Clicked on ${result[0].name} with id ${result[0].id}`)  //dev tool
         });
         usersContainer.appendChild(btn);
         const span = document.querySelector(`#btn-${id}-badge`);
@@ -58,21 +58,22 @@ async function loadUserCard(id) {
                 resultsContainer.innerHTML =
                     `<div id="card-${person[0].id}" class="card text-secondary-emphasis bg-secondary-subtle border border-secondary-subtle">
                         <div class="d-flex flex-row card-header">
-                            <div class="d-flex">
-                                <p class="mb-0"><b><em>${person[0].name}</em></b> (${person[0].age} yrs old ${gender})</p>&nbsp;&nbsp;
+                            <div class="d-flex flex-column">
+                                <p class="mb-0 text-wrap text-break"><b><em>${person[0].name}</em></b> (${person[0].age} yrs old ${gender})</p>
                                 <span id="badge-${person[0].id}"></span>
                             </div>
-                            <div class="d-flex flex-grow-1 justify-content-end">
-                                <button id="btn-edit-${person[0].id}" class="btn btn-sm btn-outline-secondary mb-auto mx-2" type="button">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
-                                    <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
-                                    </svg>
-                                </button>
-                                <button id="btn-del-${person[0].id}" class="btn btn-sm btn-outline-secondary mb-auto" type="button">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
-                                    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
-                                    </svg>
-                                </button>
+                                <div class="d-flex flex-grow-1 justify-content-end">
+                                    <div class="dropdown">
+                                        <a class="btn btn-sm btn-outline-secondary dropdown-toggle ms-3" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Menu
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li id="btn-new-acft-${person[0].id}"><a class="dropdown-item">New ACFT</a></li>
+                                            <li id="btn-edit-${person[0].id}"><a class="dropdown-item">Edit User</a></li>
+                                            <li id="btn-del-${person[0].id}"><a class="dropdown-item">Delete User</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>`
@@ -90,7 +91,6 @@ async function loadUserCard(id) {
                 return person;
             })
             .then(results => {
-                // results.reverse();
                 let smallDot = false;
                 let newUser = false;
                 if (results[0].acft_id === null) {
@@ -114,11 +114,12 @@ async function loadUserCard(id) {
                                 <div class="accordion-item">
                                     <h2 class="accordion-header">
                                         <button id="date-banner-${result.acft_id}" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#result-${result.acft_id}" aria-expanded="true" aria-controls="result-${result.acft_id}">
-                                            Test date: ${formattedDate}&nbsp;&nbsp;<span id="badge-${result.acft_id}-score" class="badge rounded-pill text-bg-secondary">${totalScore} points</span>
+                                            ACFT (${formattedDate})&nbsp;<span id="badge-${result.acft_id}-score" class="badge rounded-pill text-bg-secondary">${totalScore}</span>&nbsp;
                                         </button>
                                     </h2>
                                     <div id="result-${result.acft_id}" class="accordion-collapse collapse">
                                         <div class="accordion-body">
+                                            <p>Age on test day: ${result.acft_age}</p>
                                             <p class="mb-0">Max Deadlift (MDL): ${result.mdl} lbs</p>
                                                 <div class="progress" role="progressbar" aria-label="mdl" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
                                                     <div class="progress-bar" style="width: ${result.mdlScore}%">${result.mdlScore} points</div>
@@ -148,17 +149,37 @@ async function loadUserCard(id) {
                                 </div>
                             </div>
                         </div>`
+                    passFailTestBarColoring(result.acft_id);
                 });
-                const testCardHeadder = document.querySelector(`#date-banner-${results[0].acft_id}`);
-                testCardHeadder.classList.remove("collapsed");
-                const testCardResults = document.querySelector(`#result-${results[0].acft_id}`);
-                testCardResults.classList.add("show");
+                const firstTestCardHeadder = document.querySelector(`#date-banner-${results[0].acft_id}`);
+                firstTestCardHeadder.classList.remove("collapsed");
+                const firstTestCardResults = document.querySelector(`#result-${results[0].acft_id}`);
+                firstTestCardResults.classList.add("show");
         })
     } catch (error) {
         console.error(error);
     }
 }
 
+function passFailTestBarColoring(acft_id) {
+    const testCardHeadder = document.querySelector(`#date-banner-${acft_id}`);
+    const resultsAccordion = document.querySelector(`#result-${acft_id}`);
+    const progressBars = resultsAccordion.querySelectorAll(".progress-bar");
+    let failed = false;
+    progressBars.forEach(progressBar => {
+        if (progressBar.style.width.replace('%','') < 60) {
+            progressBar.classList.add("bg-danger");
+            failed = true;
+        }
+    });
+    if (failed === true) {
+        const newSpan = document.createElement("span");
+        newSpan.setAttribute('id', `badge-${acft_id}-status`);
+        newSpan.classList.add("text-danger", "fst-italic");
+        newSpan.textContent = "Failed";
+        testCardHeadder.appendChild(newSpan);
+    } 
+}
 
 function newUserForm() {
 
@@ -217,7 +238,7 @@ function updateTestStatusColor(elementObj, dateString, smallDot = false, newUser
     const parsedDate = new Date(dateString);
     if (newUser === true && smallDot === true) {
         elementObj.setAttribute("class", "");
-        elementObj.classList.add("position-absolute", "top-0", "start-100", "translate-middle", "px-2", "bg-primary", "border", "border-light", "rounded-pill");
+        elementObj.classList.add("position-absolute", "top-0", "start-100", "translate-middle", "px-2", "bg-primary", "border", "border-light", "rounded-pill", "text-nowrap");
         elementObj.textContent = "New";
     } else if (smallDot === true) {
         if (parsedDate >= sixMonthsAgo) {
@@ -237,7 +258,7 @@ function updateTestStatusColor(elementObj, dateString, smallDot = false, newUser
         } else if (parsedDate >= oneYearAgo) {
             elementObj.setAttribute("class", "");
             elementObj.classList.add("badge", "rounded-pill", "text-bg-warning", "mb-auto");
-            elementObj.textContent = "6mo+ test";
+            elementObj.textContent = "6mo+";
         } else {
             elementObj.setAttribute("class", "");
             elementObj.classList.add("badge", "rounded-pill", "text-bg-danger", "mb-auto");
@@ -365,7 +386,6 @@ btnModalSave.addEventListener("click", event => {
     const age = ageInput.value;
     const gender = genderInput.value;
     createNewUser(name, age, gender);
-    // form.reset();
     document.getElementById("btn-modal-close-2").click();
 })
 
