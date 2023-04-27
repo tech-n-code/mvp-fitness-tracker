@@ -82,23 +82,28 @@ async function loadUserCard(id) {
                 newACFTbtn.setAttribute("data-bs-toggle", "modal");
                 newACFTbtn.setAttribute("data-bs-target", "#newACFTmodal");
                 
-                const btnACFTmodalSave = document.getElementById("btn-modal2-save");
+                const btnACFTmodalSave = document.getElementById("btn-modal3-acft-save");
                 btnACFTmodalSave.dataset.id = person[0].id;
                 btnACFTmodalSave.dataset.age = person[0].age;
 
                 const editBtn = document.querySelector(`#btn-edit-${person[0].id}`);
                 editBtn.setAttribute("data-bs-toggle", "modal");
-                editBtn.setAttribute("data-bs-target", "#newUserModal");
+                editBtn.setAttribute("data-bs-target", "#editUserModal");
+                editBtn.dataset.id = person[0].id;
+                editBtn.dataset.name = person[0].name;
+                editBtn.dataset.age = person[0].age;
+
 
                 const btnUserModalSave = document.getElementById("btn-modal-save");
                 btnUserModalSave.dataset.id = person[0].id;
                 btnUserModalSave.dataset.age = person[0].age;
                 
-                const deleteBtn = document.querySelector(`#btn-del-${person[0].id}`);  // NEEDS FIX
-                deleteBtn.addEventListener("click", event => {
-                    console.log(`Delete btn for ${person[0].id} pressed`)  //dev tool
-                    deleteUser(person[0].id);
-                });
+                const deleteBtn = document.querySelector(`#btn-del-${person[0].id}`); 
+                deleteBtn.setAttribute("data-bs-toggle", "modal");
+                deleteBtn.setAttribute("data-bs-target", "#delConfirModal");
+
+                const btnDeleteModalConfirm = document.getElementById("btn-modal4-confirm");
+                btnDeleteModalConfirm.dataset.id = person[0].id;
 
                 loadUserResults(person[0].id)
             });      
@@ -237,6 +242,7 @@ async function createNewUser(name, age, gender) {
 }
 
 async function deleteUser(id) {
+    console.log(`inside delete function ${id}`);
     try {
         const response = await fetch(`/api/acft/person/${id}`, {
             method: 'DELETE',
@@ -412,11 +418,18 @@ async function updateTest(id, pushup_score, situp_score, date, person_id) {
     }
 }
 
-/* Synch the age input and scroll elements */
-const ageModalInput = document.getElementById('user-age');
-const ageModalScroll = document.getElementById('age-scroll-output');
-ageModalInput.addEventListener('input', function() {
+/* Synch age input and scroll elements in New User form */
+const ageModalInput = document.getElementById("user-age");
+const ageModalScroll = document.getElementById("age-scroll-output");
+ageModalInput.addEventListener("input", function() {
     ageModalScroll.innerHTML = ageModalInput.value;
+});
+
+/* Synch age input and scroll elements in Edit User form */
+const editAgeModalInput = document.getElementById("edit-user-age");
+const editAgeModalScroll = document.getElementById("edit-age-scroll-output");
+editAgeModalInput.addEventListener("input", function() {
+    editAgeModalScroll.innerHTML = editAgeModalInput.value;
 });
 
 const btnUserModalSave = document.getElementById("btn-modal-save");
@@ -432,12 +445,30 @@ btnUserModalSave.addEventListener("click", event => {
     document.getElementById("btn-modal-close-2").click();
 })
 
-const btnACFTmodalSave = document.getElementById("btn-modal2-save");
+const btnACFTmodalSave = document.getElementById("btn-modal3-acft-save");
 btnACFTmodalSave.addEventListener("click", event => {
     const age = btnACFTmodalSave.dataset.age;
     const id = btnACFTmodalSave.dataset.id;
     createNewTest(age, id);
-    document.getElementById("btn-modal2-close-2").click();
+    document.getElementById("btn-modal3-close-2").click();
+})
+
+const editUserModal = document.querySelector("#editUserModal");
+editUserModal.addEventListener("shown.bs.modal", event => {
+    const editBtn = document.querySelector('[id^="btn-edit-"]');
+    console.log(editBtn);
+    const editUserName = document.querySelector("#edit-user-name");
+    editUserName.value = editBtn.dataset.name;
+    editUserName.setAttribute("placeholder", editBtn.dataset.name);
+    editAgeModalInput.value = editBtn.dataset.age;
+    editAgeModalScroll.innerHTML = editBtn.dataset.age;
+})
+
+const btnDeleteModalConfirm = document.getElementById("btn-modal4-confirm");
+btnDeleteModalConfirm.addEventListener("click", event => {
+    const id = btnDeleteModalConfirm.dataset.id;
+    deleteUser(id);
+    document.getElementById("btn-modal4-close").click();
 })
 
 const btnModalClose1 = document.getElementById("btn-modal-close-1");
@@ -458,12 +489,28 @@ btnModalClose2.addEventListener("click", event => {
 
 const btnModal2Close1 = document.getElementById("btn-modal2-close-1");
 btnModal2Close1.addEventListener("click", event => {
-    const form = document.querySelector("#acft-modal-body form");
+    editAgeModalInput.value = editAgeModalInput.defaultValue;
+    editAgeModalScroll.innerHTML = editAgeModalInput.value;
+    const form = document.querySelector("#edit-user-modal-body form");
     form.reset();
 })
 
 const btnModal2Close2 = document.getElementById("btn-modal2-close-2");
 btnModal2Close2.addEventListener("click", event => {
+    editAgeModalInput.value = editAgeModalInput.defaultValue;
+    editAgeModalScroll.innerHTML = editAgeModalInput.value;
+    const form = document.querySelector("#edit-user-modal-body form");
+    form.reset();
+})
+
+const btnModal3Close1 = document.getElementById("btn-modal3-close-1");
+btnModal3Close1.addEventListener("click", event => {
+    const form = document.querySelector("#acft-modal-body form");
+    form.reset();
+})
+
+const btnModal3Close2 = document.getElementById("btn-modal3-close-2");
+btnModal3Close2.addEventListener("click", event => {
     const form = document.querySelector("#acft-modal-body form");
     form.reset();
 })

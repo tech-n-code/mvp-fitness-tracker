@@ -37,7 +37,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                <h1 class="modal-title fs-5" id="userFormTitle">User</h1>
+                <h1 class="modal-title fs-5" id="userFormTitle">New User</h1>
                 <button id="btn-modal-close-1" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div id="user-modal-body" class="modal-body">
@@ -65,12 +65,37 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserFormTitle" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h1 class="modal-title fs-5" id="editUserFormTitle">Edit User</h1>
+                <button id="btn-modal2-close-1" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div id="edit-user-modal-body" class="modal-body">
+                    <form class="row">
+                        <div class="col-12 mb-3">
+                            <input id="edit-user-name" type="text" class="form-control" placeholder="User">
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="edit-user-age" class="form-label">Age: <span id="edit-age-scroll-output">17</span></label>
+                            <input type="range" id="edit-user-age" class="form-range" min="17" max="62" value="17">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="btn-modal2-close-2" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id="btn-modal2-edit-save" type="button" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="newACFTmodal" tabindex="-1" aria-labelledby="acftFormTitle" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                 <h1 class="modal-title fs-5" id="acftFormTitle">ACFT</h1>
-                <button id="btn-modal2-close-1" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button id="btn-modal3-close-1" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div id="acft-modal-body" class="modal-body">
                     <form class="row">
@@ -105,8 +130,22 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button id="btn-modal2-close-2" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button id="btn-modal2-save" type="button" class="btn btn-primary">Save</button>
+                    <button id="btn-modal3-close-2" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id="btn-modal3-acft-save" type="button" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="delConfirModal" tabindex="-1" aria-labelledby="delConfirModalTitle" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="delConfirModalTitle">Delete User?</h1>
+                    <button type="button" id="btn-modal4-close" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Dismiss</button>
+                    <button type="button" id="btn-modal4-confirm" class="btn btn-primary">Confirm</button>
                 </div>
             </div>
         </div>
