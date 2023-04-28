@@ -982,6 +982,10 @@ const btnModal3Close1 = document.getElementById("btn-modal3-close-1");
 btnModal3Close1.addEventListener("click", event => {
     const form = document.querySelector("#acft-modal-body form");
     form.reset();
+    const spans = document.querySelectorAll("#acft-modal-body span");
+    spans.forEach(span => {
+        span.innerText = '';
+    });
 })
 
 /* Modal New ACFT form bottom 'close' button */
@@ -989,6 +993,10 @@ const btnModal3Close2 = document.getElementById("btn-modal3-close-2");
 btnModal3Close2.addEventListener("click", event => {
     const form = document.querySelector("#acft-modal-body form");
     form.reset();
+    const spans = document.querySelectorAll("#acft-modal-body span");
+    spans.forEach(span => {
+        span.innerText = '';
+    });
 })
 
 /* Dark Mode switch */
