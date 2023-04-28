@@ -169,10 +169,7 @@ async function loadUserResults(id) {
                     newUser = true;
                     return;
                 }
-                
-                const testStatusBadge = document.querySelector(`#badge-${results[0].id}`);
-                updateTestStatusColor(testStatusBadge, results[0].date, smallDot, newUser);
-                
+                                
                 results.forEach(result => {
                     let formattedDate = formatDate(result.date);
                     let sdcSeconds = formatSeconds(result.sdc.seconds);
@@ -391,6 +388,10 @@ async function loadUserResults(id) {
                     passFailTestBarColoring(result.acft_id);
 
                 });
+
+                const testStatusBadge = document.querySelector(`#badge-${results[0].id}`);
+                updateTestStatusColor(testStatusBadge, results[0].date, smallDot, newUser);
+
                 const firstTestCardHeadder = document.querySelector(`#date-banner-${results[0].acft_id}`);
                 firstTestCardHeadder.classList.remove("collapsed");
                 const firstTestCardResults = document.querySelector(`#result-${results[0].acft_id}`);
@@ -459,7 +460,19 @@ function updateTestStatusColor(elementObj, dateString, smallDot = false, newUser
             elementObj.classList.add("position-absolute", "top-0", "start-100", "translate-middle", "p-2", "bg-danger", "border", "border-light", "rounded-circle");
         }
     } else {
-        if (parsedDate >= sixMonthsAgo) {
+        const progressBars = document.querySelectorAll(".progress-bar");
+        console.log(progressBars)
+        let failedEvent = false;
+        progressBars.forEach(progressBar => {
+            if (progressBar.classList.contains("bg-danger")) {
+                failedEvent = true;
+            }
+        });
+        if (failedEvent) {
+            elementObj.setAttribute("class", "");
+            elementObj.classList.add("badge", "rounded-pill", "text-bg-danger", "mb-auto");
+            elementObj.textContent = "Overdue";
+        } else if (parsedDate >= sixMonthsAgo) {
             elementObj.setAttribute("class", "");
             elementObj.classList.add("badge", "rounded-pill", "text-bg-success", "mb-auto");
             elementObj.textContent = "Current";
@@ -556,17 +569,23 @@ async function createNewTest(age, person_id) {
     const sptInput = form.querySelector("#spt");
     const hrpInput = form.querySelector("#hrp");
     const sdcInput = form.querySelector("#sdc");
+    const sdcTime = sdcInput.value;
+    const sdcTimeWithHrs = `00:${sdcTime}`;
     const plkInput = form.querySelector("#plk");
+    const plkTime = plkInput.value;
+    const plkTimeWithHrs = `00:${plkTime}`;
     const runInput = form.querySelector("#run");
+    const runTime = runInput.value;
+    const runTimeWithHrs = `00:${runTime}`;
     const dateInput = form.querySelector("#date");
     const payload = JSON.stringify({
         age: age,
         mdl: mdlInput.value,
         spt: sptInput.value,
         hrp: hrpInput.value,
-        sdc: sdcInput.value,
-        plk: plkInput.value,
-        run: runInput.value,
+        sdc: sdcTimeWithHrs,
+        plk: plkTimeWithHrs,
+        run: runTimeWithHrs,
         walk: null,
         nike: null,
         swim: null,
@@ -902,13 +921,17 @@ const runValidator = () => {
         runError.textContent = "Invalid time range (max 59:59)";
         return false;
     }
+    const formattedValue = `${minutes}:${seconds}`;
+    console.log(formattedValue);
+    runInput.value = formattedValue;
     runError.textContent = "";
     return true;
 };
 
 const runCleave = new Cleave(runInput, {
     time: true,
-    timePattern: ["m", "s"]
+    timePattern: ["m", "s"],
+    onValueChanged: runValidator
 });
 
 runInput.addEventListener("blur", runValidator);

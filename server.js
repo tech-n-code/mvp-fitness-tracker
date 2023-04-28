@@ -199,7 +199,7 @@ app.delete('/api/acft/person/:id', function(req, res) {
 /* Create test */
 app.post('/api/acft/test', function(req, res) {
     const { age, mdl, spt, hrp, sdc, plk, run, date, person_id } = req.body;
-    pool.query('INSERT INTO acft (age, mdl, spt, hrp, sdc, plk, run, date, person_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *', [age, mdl, spt, hrp, sdc, plk, run, date, person_id], function(err, result) {
+    pool.query("INSERT INTO acft (age, mdl, spt, hrp, sdc, plk, run, date, person_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *", [age, mdl, spt, hrp, sdc, plk, run, date, person_id], function(err, result) {
         if (err) {
             console.error(err);
             res.status(500).send("Error creating test");
