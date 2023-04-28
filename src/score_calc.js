@@ -1,6 +1,6 @@
 import { scoringScales } from "./acft_tables.js";
 
-// console.log(scoreNumBased("M", 28, "hrp", 31)); //75
+// console.log(scoreNumBased("F", 43, "hrp", 40)); //100
 
 export function scoreNumBased(gender, age, event, num) {
     const ageStr = ageToStrBracket(age);
@@ -8,6 +8,10 @@ export function scoreNumBased(gender, age, event, num) {
     const genderStr = gender === "M" ? "male" : "female";
     const eventArray = scoringScales[genderStr][ageStr][eventVerbose];
     let counter = 0;
+    const highestRawScore = eventArray[eventArray.length-1].rawScore
+    if (num > highestRawScore) {
+        return 100;
+    }
     for (let i = 0; i < eventArray.length; i++) {
         if (num === eventArray[i].rawScore) {
             return eventArray[i].score;
@@ -34,11 +38,11 @@ export function scoreTimeBased(gender, age, event, min, sec) {
     const genderStr = gender === "M" ? "male" : "female";
     const eventArray = scoringScales[genderStr][ageStr][eventVerbose];
     if (eventVerbose === "2.5 mile walk" || eventVerbose === "12km bike" || eventVerbose === "1km swim" || eventVerbose === "5km row") {
-        let rawScoreInSeconds = convertToSeconds(eventArray);
+        const rawScoreInSeconds = convertToSeconds(eventArray);
         return timeInSeconds <= rawScoreInSeconds ? "Go" : "No-Go";
     } else if (eventVerbose === "plank") {  //higher time is better, some "---" fields in table
         let counter = 0;
-        let highestRawScoreInSeconds = convertToSeconds(eventArray[eventArray.length-1].rawScore);
+        const highestRawScoreInSeconds = convertToSeconds(eventArray[eventArray.length-1].rawScore);
         if (timeInSeconds > highestRawScoreInSeconds) {
             return 100;
         }
@@ -58,7 +62,7 @@ export function scoreTimeBased(gender, age, event, min, sec) {
             }
         }
     } else {  //lower time is better, no "---" fields in table
-        let lowestRawScoreInSeconds = convertToSeconds(eventArray[eventArray.length-1].rawScore);
+        const lowestRawScoreInSeconds = convertToSeconds(eventArray[eventArray.length-1].rawScore);
         if (timeInSeconds < lowestRawScoreInSeconds) {
             return 100;
         }

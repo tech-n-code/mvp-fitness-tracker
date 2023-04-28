@@ -179,57 +179,215 @@ async function loadUserResults(id) {
                     let plkSeconds = formatSeconds(result.plk.seconds);
                     let runSeconds = formatSeconds(result.run.seconds);
                     let totalScore = result.mdlScore + result.sptScore + result.hrpScore + result.sdcScore + result.plkScore + result.runScore;
+
                     const card = document.querySelector(`#card-${result.person_id}`);
-                    card.innerHTML +=
-                        `<div id="card-body-${result.acft_id}" class="card-body">
-                            <div class="accordion">
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header">
-                                        <button id="date-banner-${result.acft_id}" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#result-${result.acft_id}" aria-expanded="true" aria-controls="result-${result.acft_id}">
-                                            ACFT (${formattedDate})&nbsp;<span id="badge-${result.acft_id}-score" class="badge rounded-pill text-bg-secondary mx-1">${totalScore}</span>&nbsp;
-                                        </button>
-                                    </h2>
-                                    <div id="result-${result.acft_id}" class="accordion-collapse collapse">
-                                        <div class="accordion-body">
-                                            <div class="d-flex flex-row">
-                                                <div class="d-flex flex-column">
-                                                    <p class="mb-0"><em>Age on test day: ${result.acft_age}</em></p>
-                                                </div>    
-                                                    <div class="d-flex flex-grow-1 justify-content-end">
-                                                        <button id="testDel-${result.acft_id}" type="button" data-acftId="${result.acft_id}" class="btn btn-outline-secondary btn-sm ms-3 del-test-btn">Delete</button>
-                                                    </div>
-                                            </div>
-                                            <p class="mb-0">Max Deadlift (MDL): ${result.mdl} lbs</p>
-                                                <div class="progress" role="progressbar" aria-label="mdl" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-                                                    <div class="progress-bar" style="width: ${result.mdlScore}%">${result.mdlScore} points</div>
-                                                </div>
-                                            <p class="mb-0 mt-3">Standing Power Throw (SPT): ${result.spt} m</p>
-                                                <div class="progress" role="progressbar" aria-label="spt" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-                                                    <div class="progress-bar" style="width: ${result.sptScore}%">${result.sptScore} points</div>
-                                                </div>
-                                            <p class="mb-0 mt-3">Hand Release Push-ups (HRP): ${result.hrp} reps</p>
-                                                <div class="progress" role="progressbar" aria-label="hrp" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-                                                    <div class="progress-bar" style="width: ${result.hrpScore}%">${result.hrpScore} points</div>
-                                                </div>
-                                            <p class="mb-0 mt-3">Spint-Drag-Carry (SDC): ${result.sdc.minutes}:${sdcSeconds} mins</p>
-                                                <div class="progress" role="progressbar" aria-label="sdc" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-                                                    <div class="progress-bar" style="width: ${result.sdcScore}%">${result.sdcScore} points</div>
-                                                </div>
-                                            <p class="mb-0 mt-3">Plank (PLK): ${result.plk.minutes}:${plkSeconds} mins</p>
-                                                <div class="progress" role="progressbar" aria-label="plk" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-                                                    <div class="progress-bar" style="width: ${result.plkScore}%">${result.plkScore} points</div>
-                                                </div>
-                                            <p class="mb-0 mt-3">Two-Mile Run (2MR): ${result.run.minutes}:${runSeconds} mins</p>
-                                                <div class="progress" role="progressbar" aria-label="run" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-                                                    <div class="progress-bar" style="width: ${result.runScore}%">${result.runScore} points</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>`
-                        
+
+                    const cardBody = document.createElement("div");
+                    cardBody.id = `card-body-${result.acft_id}`;
+                    cardBody.classList.add("card-body");
+                    card.appendChild(cardBody);
+                    
+                    const accordion = document.createElement("div");
+                    accordion.classList.add("accordion");
+                    cardBody.appendChild(accordion);
+                    
+                    const accordionItem = document.createElement("div");
+                    accordionItem.classList.add("accordion-item");
+                    accordion.appendChild(accordionItem);
+                    
+                    const accordionHeader = document.createElement('h2');
+                    accordionHeader.classList.add('accordion-header');
+                    accordionItem.appendChild(accordionHeader);
+                    
+                    const testCardBtn = document.createElement("button");
+                    testCardBtn.id = `date-banner-${result.acft_id}`;
+                    testCardBtn.classList.add('accordion-button', 'collapsed');
+                    testCardBtn.type = "button";
+                    testCardBtn.setAttribute("data-bs-toggle", "collapse");
+                    testCardBtn.setAttribute("data-bs-target", `#result-${result.acft_id}`);
+                    testCardBtn.setAttribute("aria-expanded", true);
+                    testCardBtn.setAttribute("aria-controls", `result-${result.acft_id}`);
+                    
+                    const span = document.createElement("span");
+                    span.id = `badge-${result.acft_id}-score`;
+                    span.classList.add("badge", "rounded-pill", "text-bg-secondary", "mx-1");
+                    span.innerText = totalScore;
+                    
+                    testCardBtn.innerHTML = `ACFT (${formattedDate})`;
+                    testCardBtn.appendChild(span);
+                    accordionHeader.appendChild(testCardBtn);
+                    accordionItem.appendChild(accordionHeader);
+                    
+                    const accordionCollapse = document.createElement("div");
+                    accordionCollapse.id = `result-${result.acft_id}`;
+                    accordionCollapse.classList.add("accordion-collapse", "collapse");
+                    
+                    const accordionBody = document.createElement("div");
+                    accordionBody.classList.add("accordion-body");
+                    
+                    const dFlex1 = document.createElement("div");
+                    dFlex1.classList.add("d-flex", "flex-row");
+                    
+                    const dFlex2 = document.createElement("div");
+                    dFlex2.classList.add("d-flex", "flex-column");
+                    
+                    const ageOnTestDay = document.createElement("p");
+                    ageOnTestDay.classList.add("mb-0");
+                    ageOnTestDay.innerHTML = `<em>Age on test day: ${result.acft_age}</em>`;
+                    dFlex2.appendChild(ageOnTestDay);
+                    
+                    const dFlex3 = document.createElement("div");
+                    dFlex3.classList.add('d-flex', 'flex-grow-1', 'justify-content-end');
+                    
+                    const testDeleteBtn = document.createElement('button');
+                    testDeleteBtn.id = `testDel-${result.acft_id}`;
+                    testDeleteBtn.type = "button";
+                    testDeleteBtn.setAttribute("data-acftId", result.acft_id);
+                    testDeleteBtn.setAttribute("data-userId", result.person_id);
+                    testDeleteBtn.classList.add('btn', "btn-outline-secondary", "btn-sm", "ms-3");
+                    testDeleteBtn.innerText = "Delete";
+                                        
+                    testDeleteBtn.addEventListener("click", event => {
+                        const acft_id = testDeleteBtn.getAttribute("data-acftId");
+                        const user_id = testDeleteBtn.getAttribute("data-userId");
+                        deleteACFT(acft_id, user_id);
+                    });
+
+                    dFlex3.appendChild(testDeleteBtn);
+                    
+                    dFlex1.appendChild(dFlex2);
+                    dFlex1.appendChild(dFlex3);
+                    accordionBody.appendChild(dFlex1);
+                    
+                    const p1 = document.createElement("p");
+                    p1.classList.add("mb-0");
+                    p1.innerText = `Max Deadlift (MDL): ${result.mdl} lbs`;
+                    accordionBody.appendChild(p1);
+                    
+                    const div1 = document.createElement("div");
+                    div1.classList.add("progress");
+                    div1.role = "progressbar";
+                    div1.setAttribute("aria-label", "mdl");
+                    div1.setAttribute("aria-valuenow", "50");
+                    div1.setAttribute("aria-valuemin", "0");
+                    div1.setAttribute("aria-valuemax", "100");
+                    
+                    const div2 = document.createElement("div");
+                    div2.classList.add("progress-bar");
+                    div2.style = `width: ${result.mdlScore}%`;
+                    div2.innerText = `${result.mdlScore} points`;
+                    
+                    div1.appendChild(div2);
+                    accordionBody.appendChild(div1);
+                    
+                    const p2 = document.createElement("p");
+                    p2.classList.add("mb-0", "mt-3");
+                    p2.innerText = `Standing Power Throw (SPT): ${result.spt} m`;
+                    accordionBody.appendChild(p2);
+                    
+                    const div3 = document.createElement("div");
+                    div3.classList.add("progress");
+                    div3.role = "progressbar";
+                    div3.setAttribute("aria-label", "spt");
+                    div3.setAttribute("aria-valuenow", "50");
+                    div3.setAttribute("aria-valuemin", "0");
+                    div3.setAttribute("aria-valuemax", "100");
+                    
+                    const div4 = document.createElement("div");
+                    div4.classList.add("progress-bar");
+                    div4.style = `width: ${result.sptScore}%`;
+                    div4.innerText = `${result.sptScore} points`;
+                    
+                    div3.appendChild(div4);
+                    accordionBody.appendChild(div3);
+                    
+                    const p3 = document.createElement("p");
+                    p3.classList.add("mb-0", "mt-3");
+                    p3.innerText = `Hand-Release Push-up (HRP): ${result.hrp} reps`;
+                    accordionBody.appendChild(p3);
+                    
+                    const div5 = document.createElement("div");
+                    div5.classList.add("progress");
+                    div5.role = "progressbar";
+                    div5.setAttribute("aria-label", "hrp");
+                    div5.setAttribute("aria-valuenow", "50");
+                    div5.setAttribute("aria-valuemin", "0");
+                    div5.setAttribute("aria-valuemax", "100");
+                    
+                    const div6 = document.createElement("div");
+                    div6.classList.add("progress-bar");
+                    div6.style = `width: ${result.hrpScore}%`;
+                    div6.innerText = `${result.hrpScore} points`;
+                    
+                    div5.appendChild(div6);
+                    accordionBody.appendChild(div5);
+                    
+                    const p4 = document.createElement("p");
+                    p4.classList.add("mb-0", "mt-3");
+                    p4.innerText = `Spint-Drag-Carry (SDC): ${result.sdc.minutes}:${sdcSeconds} mins`;
+                    accordionBody.appendChild(p4);
+                    
+                    const div7 = document.createElement("div");
+                    div7.classList.add("progress");
+                    div7.role = "progressbar";
+                    div7.setAttribute("aria-label", "sdc");
+                    div7.setAttribute("aria-valuenow", "50");
+                    div7.setAttribute("aria-valuemin", "0");
+                    div7.setAttribute("aria-valuemax", "100");
+                    
+                    const div8 = document.createElement("div");
+                    div8.classList.add("progress-bar");
+                    div8.style = `width: ${result.sdcScore}%`;
+                    div8.innerText = `${result.sdcScore} points`;
+                    
+                    div7.appendChild(div8);
+                    accordionBody.appendChild(div7);
+                    
+                    const p5 = document.createElement("p");
+                    p5.classList.add("mb-0", "mt-3");
+                    p5.innerText = `Plank (PLK): ${result.plk.minutes}:${plkSeconds} mins`;
+                    accordionBody.appendChild(p5);
+                    
+                    const div9 = document.createElement("div");
+                    div9.classList.add("progress");
+                    div9.role = "progressbar";
+                    div9.setAttribute("aria-label", "lt");
+                    div9.setAttribute("aria-valuenow", "50");
+                    div9.setAttribute("aria-valuemin", "0");
+                    div9.setAttribute("aria-valuemax", "100");
+                    
+                    const div10 = document.createElement("div");
+                    div10.classList.add("progress-bar");
+                    div10.style = `width: ${result.plkScore}%`;
+                    div10.innerText = `${result.plkScore} points`;
+                    
+                    div9.appendChild(div10);
+                    accordionBody.appendChild(div9);
+                    
+                    const p6 = document.createElement("p");
+                    p6.classList.add("mb-0", "mt-3");
+                    p6.innerText = `Two-Mile Run (2MR): ${result.run.minutes}:${runSeconds} mins`;
+                    accordionBody.appendChild(p6);
+                    
+                    const div11 = document.createElement("div");
+                    div11.classList.add("progress");
+                    div11.role = "progressbar";
+                    div11.setAttribute("aria-label", "lt");
+                    div11.setAttribute("aria-valuenow", "50");
+                    div11.setAttribute("aria-valuemin", "0");
+                    div11.setAttribute("aria-valuemax", "100");
+                    
+                    const div12 = document.createElement("div");
+                    div12.classList.add("progress-bar");
+                    div12.style = `width: ${result.runScore}%`;
+                    div12.innerText = `${result.runScore} points`;
+                    
+                    div11.appendChild(div12);
+                    accordionBody.appendChild(div11);
+                    
+                    accordionCollapse.appendChild(accordionBody);
+                    accordionItem.appendChild(accordionCollapse);
+
                     passFailTestBarColoring(result.acft_id);
 
                 });
@@ -242,6 +400,23 @@ async function loadUserResults(id) {
     } catch (err) {
         console.error(err);
     }
+}
+
+function formatDate(resultDate) {
+    const date = new Date(resultDate);
+    const day = date.getDate();
+    const month = date.toLocaleString("default", { month: 'long' });
+    const year = date.getFullYear();
+    const formattedDate = `${day} ${month} ${year}`;
+    return formattedDate;
+}
+
+function formatSeconds(seconds) {
+    if (seconds < 10) {
+        const twoDigitSeconds = `0${seconds}`;
+        return twoDigitSeconds;
+    }
+    return seconds;
 }
 
 function passFailTestBarColoring(acft_id) {
@@ -257,68 +432,11 @@ function passFailTestBarColoring(acft_id) {
     });
     if (failed === true) {
         const newSpan = document.createElement("span");
-        newSpan.setAttribute('id', `badge-${acft_id}-status`);
+        newSpan.id = `badge-${acft_id}-status`;
         newSpan.classList.add("text-danger", "fst-italic");
         newSpan.textContent = "Failed";
         testCardHeadder.appendChild(newSpan);
     } 
-}
-
-async function createNewUser(name, age, gender) {
-    const payload = JSON.stringify({
-        name: name,
-        gender: gender,
-        age: age 
-    });
-    const jsonHeaders = new Headers({
-        "Content-Type": "application/json"
-    });
-    try {
-        const response = await fetch(`/api/acft/person`, {
-            method: "POST",
-            body: payload,
-            headers: jsonHeaders
-        });
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`)
-        } else {
-            const user = await response.json();
-            loadUserBtn(user[0].id);
-        }
-    } catch (err) {
-        console.error(err);
-    }
-}
-
-async function deleteUser(id) {
-    console.log(`inside delete function ${id}`);
-    try {
-        const response = await fetch(`/api/acft/person/${id}`, {
-            method: 'DELETE',
-        });
-        const card = document.querySelector(`#card-${id}`);
-        card.remove();
-        const btn = document.querySelector(`#btn-${id}`);
-        btn.remove();
-        const firstChild = usersContainer.children[0];
-        const dataId = firstChild.getAttribute("data-id");
-        loadUserCard(dataId);
-    } catch (err) {
-        console.error(err);
-    }
-}
-
-async function deleteACFT(acft_id) {
-    console.log(`inside acft delete function ${acft_id}`);
-    try {
-        const response = await fetch(`/api/acft/test/${acft_id}`, {
-            method: 'DELETE',
-        });
-        const card = document.querySelector(`#card-body-${acft_id}`);
-        card.remove();
-    } catch (err) {
-        console.error(err);
-    }
 }
 
 function updateTestStatusColor(elementObj, dateString, smallDot = false, newUser = false) {
@@ -357,30 +475,38 @@ function updateTestStatusColor(elementObj, dateString, smallDot = false, newUser
     }
 }
 
-function formatDate(resultDate) {
-    const date = new Date(resultDate);
-    const day = date.getDate();
-    const month = date.toLocaleString("default", { month: 'long' });
-    const year = date.getFullYear();
-    const formattedDate = `${day} ${month} ${year}`;
-    return formattedDate;
-}
-
-function formatSeconds(seconds) {
-    if (seconds < 10) {
-        const twoDigitSeconds = `0${seconds}`;
-        return twoDigitSeconds;
+async function createNewUser(name, age, gender) {
+    const payload = JSON.stringify({
+        name: name,
+        gender: gender,
+        age: age 
+    });
+    const jsonHeaders = new Headers({
+        "Content-Type": "application/json"
+    });
+    try {
+        const response = await fetch(`/api/acft/person`, {
+            method: "POST",
+            body: payload,
+            headers: jsonHeaders
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+        } else {
+            const user = await response.json();
+            loadUserBtn(user[0].id);
+        }
+    } catch (err) {
+        console.error(err);
     }
-    return seconds;
 }
-
-// updatePerson(10, "Kyle", "F", 45);
 
 async function updateUser(id, name, age) {
     const payload = JSON.stringify({
         name: name,
         age: age 
     });
+    console.log(payload);  //dev tool
     const jsonHeaders = new Headers({
         "Content-Type": "application/json"
     });
@@ -394,7 +520,7 @@ async function updateUser(id, name, age) {
             throw new Error(`HTTP error! status: ${response.status}`)
         } else {
             let user = await response.json();
-            console.log(user[0].id);  // dev tool
+            console.log(user[0].id);  //dev tool
             const userBtn = document.querySelector(`#btn-${user[0].id}`);
             userBtn.remove();
             loadUserBtn(user[0].id);
@@ -406,7 +532,39 @@ async function updateUser(id, name, age) {
     }
 }
 
-// createTest(70, 64, "2023-03-16 08:45:00", 10);
+async function deleteUser(id) {
+    console.log(`inside delete function ${id}`);
+    try {
+        const response = await fetch(`/api/acft/person/${id}`, {
+            method: 'DELETE',
+        });
+        const card = document.querySelector(`#card-${id}`);
+        card.remove();
+        const btn = document.querySelector(`#btn-${id}`);
+        btn.remove();
+        const firstChild = usersContainer.children[0];
+        const dataId = firstChild.getAttribute("data-id");
+        loadUserCard(dataId);
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+async function deleteACFT(acftId, userId) {
+    try {
+        const response = await fetch(`/api/acft/test/${acftId}`, {
+            method: 'DELETE',
+        });
+        console.log(`Deleted test id ${acftId}`);  //dev tool
+        const userBtn = document.querySelector(`#btn-${userId}`);
+        userBtn.remove();
+        loadUserBtn(userId);
+        resultsContainer.innerHTML = '';
+        loadUserCard(userId);
+    } catch (err) {
+        console.error(err);
+    }
+}
 
 async function createNewTest(age, person_id) {
     const form = document.querySelector("#acft-modal-body form");
@@ -445,16 +603,21 @@ async function createNewTest(age, person_id) {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`)
         } else {
-            const message = await response.json();
-            loadUserCard(person_id);
-            console.log(message);
+            const test = await response.json();
+            console.log(test);  //dev tool
+            const userBtn = document.querySelector(`#btn-${test[0].person_id}`);
+            userBtn.remove();
+            loadUserBtn(test[0].person_id);
+            resultsContainer.innerHTML = '';
+            loadUserCard(test[0].person_id);
+            console.log(test[0].person_id);  //dev tool
         }
     } catch (err) {
         console.error(err);
     }
 }
 
-
+/* Future Feature */
 // updateTest(12, 71, 64, "2023-03-16 08:45:00", 10);
 
 async function updateTest(id, pushup_score, situp_score, date, person_id) {
@@ -468,7 +631,7 @@ async function updateTest(id, pushup_score, situp_score, date, person_id) {
         "Content-Type": "application/json"
     });
     try {
-        const response = await fetch(`/api/acft/test/${id}`, {  // ${rootURL}
+        const response = await fetch(`/api/acft/test/${id}`, {
             method: "PUT",
             body: payload,
             headers: jsonHeaders
@@ -479,6 +642,22 @@ async function updateTest(id, pushup_score, situp_score, date, person_id) {
             const message = await response.text();
             console.log(message);
         }
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+async function deleteACFT(acftId, userId) {
+    try {
+        const response = await fetch(`/api/acft/test/${acftId}`, {
+            method: 'DELETE',
+        });
+        console.log(`Deleted test id ${acftId}`);  //dev tool
+        const userBtn = document.querySelector(`#btn-${userId}`);
+        userBtn.remove();
+        loadUserBtn(userId);
+        resultsContainer.innerHTML = '';
+        loadUserCard(userId);
     } catch (err) {
         console.error(err);
     }
@@ -498,22 +677,7 @@ editAgeModalInput.addEventListener("input", function() {
     editAgeModalScroll.innerHTML = editAgeModalInput.value;
 });
 
-const testDelBtns = document.querySelectorAll(".del-test-btn");
-// testDelBtn.addEventListener("click", event => {
-//     const acft_id = this.getAttribute('data-acft-id');
-//     console.log(acft_id);
-//     deleteACFT(acft_id);
-// });
-console.log(testDelBtns);
-testDelBtns.forEach(button => {
-    console.log(testDelBtns);
-    button.addEventListener('click', () => {
-        const acft_Id = button.dataset.acftId;
-        console.log(acft_Id);
-        // deleteACFT(acft_Id);
-    });
-});
-
+/* Modal form actions when saving a New User */
 const btnUserModalSave = document.getElementById("btn-modal-save");
 btnUserModalSave.addEventListener("click", event => {
     const form = document.querySelector("#user-modal-body form");
@@ -527,6 +691,7 @@ btnUserModalSave.addEventListener("click", event => {
     document.getElementById("btn-modal-close-2").click();
 })
 
+/* Modal form actions when saving a New ACFT */
 const btnACFTmodalSave = document.getElementById("btn-modal3-acft-save");
 btnACFTmodalSave.addEventListener("click", event => {
     const age = btnACFTmodalSave.dataset.age;
@@ -535,10 +700,10 @@ btnACFTmodalSave.addEventListener("click", event => {
     document.getElementById("btn-modal3-close-2").click();
 })
 
+/* Modal form actions when opening the Edit User form */
 const editUserModal = document.querySelector("#editUserModal");
 editUserModal.addEventListener("shown.bs.modal", event => {
     const editBtn = document.querySelector('[id^="btn-edit-"]');
-    console.log(editBtn);
     const editUserName = document.querySelector("#edit-user-name");
     editUserName.value = editBtn.dataset.name;
     editUserName.setAttribute("placeholder", editBtn.dataset.name);
@@ -546,6 +711,7 @@ editUserModal.addEventListener("shown.bs.modal", event => {
     editAgeModalScroll.innerHTML = editBtn.dataset.age;
 })
 
+/* Modal form actions when saving the Edit User form */
 const btnEditUserModalSave = document.getElementById("btn-modal2-edit-save");
 btnEditUserModalSave.addEventListener("click", event => {
     const editBtn = document.querySelector('[id^="btn-edit-"]');
@@ -559,6 +725,7 @@ btnEditUserModalSave.addEventListener("click", event => {
     document.getElementById("btn-modal2-close-2").click();
 })
 
+/* Modal User delete confirmation */
 const btnDeleteModalConfirm = document.getElementById("btn-modal4-confirm");
 btnDeleteModalConfirm.addEventListener("click", event => {
     const id = btnDeleteModalConfirm.dataset.id;
@@ -566,6 +733,7 @@ btnDeleteModalConfirm.addEventListener("click", event => {
     document.getElementById("btn-modal4-close").click();
 })
 
+/* Modal New User form top 'close' button */
 const btnModalClose1 = document.getElementById("btn-modal-close-1");
 btnModalClose1.addEventListener("click", event => {
     ageModalInput.value = ageModalInput.defaultValue;
@@ -574,6 +742,7 @@ btnModalClose1.addEventListener("click", event => {
     form.reset();
 })
 
+/* Modal New User form bottom 'close' button */
 const btnModalClose2 = document.getElementById("btn-modal-close-2");
 btnModalClose2.addEventListener("click", event => {
     ageModalInput.value = ageModalInput.defaultValue;
@@ -582,6 +751,7 @@ btnModalClose2.addEventListener("click", event => {
     form.reset();
 })
 
+/* Modal Edit User form top 'close' button */
 const btnModal2Close1 = document.getElementById("btn-modal2-close-1");
 btnModal2Close1.addEventListener("click", event => {
     editAgeModalInput.value = editAgeModalInput.defaultValue;
@@ -590,6 +760,7 @@ btnModal2Close1.addEventListener("click", event => {
     form.reset();
 })
 
+/* Modal Edit User form bottom 'close' button */
 const btnModal2Close2 = document.getElementById("btn-modal2-close-2");
 btnModal2Close2.addEventListener("click", event => {
     editAgeModalInput.value = editAgeModalInput.defaultValue;
@@ -598,18 +769,21 @@ btnModal2Close2.addEventListener("click", event => {
     form.reset();
 })
 
+/* Modal New ACFT form top 'close' button */
 const btnModal3Close1 = document.getElementById("btn-modal3-close-1");
 btnModal3Close1.addEventListener("click", event => {
     const form = document.querySelector("#acft-modal-body form");
     form.reset();
 })
 
+/* Modal New ACFT form bottom 'close' button */
 const btnModal3Close2 = document.getElementById("btn-modal3-close-2");
 btnModal3Close2.addEventListener("click", event => {
     const form = document.querySelector("#acft-modal-body form");
     form.reset();
 })
 
+/* Dark Mode switch */
 darkModeSwitch.addEventListener("change", (event) => {
     if (event.target.checked) {
         const htmlTag = document.querySelector('html');
