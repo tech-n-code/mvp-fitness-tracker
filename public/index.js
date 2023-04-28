@@ -2,7 +2,6 @@ const usersContainer = document.querySelector("#users_container");
 const resultsContainer = document.querySelector("#results_container");
 const darkModeSwitch = document.querySelector("#darkMode");
 
-
 async function fetchUsers() {
     try {
         const response = await fetch('/api/acft/person');
@@ -55,53 +54,98 @@ async function loadUserCard(id) {
             })
             .then(person => {
                 const gender = person[0].gender === "M" ? "Male" : "Female";
-                resultsContainer.innerHTML =
-                    `<div id="card-${person[0].id}" class="card text-secondary-emphasis bg-secondary-subtle border border-secondary-subtle">
-                        <div class="d-flex flex-row card-header">
-                            <div class="d-flex flex-column">
-                                <p class="mb-0 text-wrap text-break"><b><em>${person[0].name}</em></b> (${person[0].age} yrs old ${gender})</p>
-                                <span id="badge-${person[0].id}"></span>
-                            </div>
-                                <div class="d-flex flex-grow-1 justify-content-end">
-                                    <div class="dropdown">
-                                        <a class="btn btn-sm btn-outline-secondary dropdown-toggle ms-3" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Menu
-                                        </a>
-                                        <ul class="dropdown-menu">
-                                            <li id="btn-new-acft-${person[0].id}"><a class="dropdown-item">New ACFT</a></li>
-                                            <li id="btn-edit-${person[0].id}"><a class="dropdown-item">Edit User</a></li>
-                                            <li id="btn-del-${person[0].id}"><a class="dropdown-item">Delete User</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>`
+
+                const cardDiv = document.createElement("div");
+                cardDiv.setAttribute("id", `card-${person[0].id}`);
+                cardDiv.setAttribute("class", "card text-secondary-emphasis bg-secondary-subtle border border-secondary-subtle");
                 
-                const newACFTbtn = document.getElementById(`btn-new-acft-${person[0].id}`)
-                newACFTbtn.setAttribute("data-bs-toggle", "modal");
-                newACFTbtn.setAttribute("data-bs-target", "#newACFTmodal");
+                const cardHeaderDiv = document.createElement("div");
+                cardHeaderDiv.setAttribute("class", "d-flex flex-row card-header");
+                
+                const nameDiv = document.createElement("div");
+                nameDiv.setAttribute("class", "d-flex flex-column");
+                
+                const nameParagraph = document.createElement("p");
+                nameParagraph.setAttribute("class", "mb-0 text-wrap text-break");
+                nameParagraph.innerHTML = `<b><em>${person[0].name}</em></b> (${person[0].age} yrs old ${gender})`;
+                
+                const badgeSpan = document.createElement("span");
+                badgeSpan.setAttribute("id", `badge-${person[0].id}`);
+                
+                nameDiv.appendChild(nameParagraph);
+                nameDiv.appendChild(badgeSpan);
+                
+                const dropdownDiv = document.createElement("div");
+                dropdownDiv.setAttribute("class", "d-flex flex-grow-1 justify-content-end");
+                
+                const dropdown = document.createElement("div");
+                dropdown.setAttribute("class", "dropdown");
+                
+                const dropdownButton = document.createElement("a");
+                dropdownButton.setAttribute("class", "btn btn-sm btn-outline-secondary dropdown-toggle ms-3");
+                dropdownButton.setAttribute("role", "button");
+                dropdownButton.setAttribute("data-bs-toggle", "dropdown");
+                dropdownButton.setAttribute("aria-expanded", "false");
+                dropdownButton.innerHTML = "Menu";
+                
+                const dropdownMenu = document.createElement("ul");
+                dropdownMenu.setAttribute("class", "dropdown-menu");
+                
+                const newAcftBtn = document.createElement("li");
+                newAcftBtn.setAttribute("id", `btn-new-acft-${person[0].id}`);
+                newAcftBtn.setAttribute("data-bs-toggle", "modal");
+                newAcftBtn.setAttribute("data-bs-target", "#newACFTmodal");
+                
+                const newAcftBtnLink = document.createElement("a");
+                newAcftBtnLink.setAttribute("class", "dropdown-item");
+                newAcftBtnLink.innerHTML = "New ACFT";
+                
+                const editUserBtn = document.createElement("li");
+                editUserBtn.setAttribute("id", `btn-edit-${person[0].id}`);
+                editUserBtn.setAttribute("data-bs-toggle", "modal");
+                editUserBtn.setAttribute("data-bs-target", "#editUserModal");
+                editUserBtn.dataset.id = person[0].id;
+                editUserBtn.dataset.name = person[0].name;
+                editUserBtn.dataset.age = person[0].age;
+                
+                const editUserBtnLink = document.createElement("a");
+                editUserBtnLink.setAttribute("class", "dropdown-item");
+                editUserBtnLink.innerHTML = "Edit User";
+                
+                const deleteUserBtn = document.createElement("li");
+                deleteUserBtn.setAttribute("id", `btn-del-${person[0].id}`);
+                deleteUserBtn.setAttribute("data-bs-toggle", "modal");
+                deleteUserBtn.setAttribute("data-bs-target", "#delConfirModal");
+                
+                const deleteUserBtnLink = document.createElement("a");
+                deleteUserBtnLink.setAttribute("class", "dropdown-item");
+                deleteUserBtnLink.innerHTML = "Delete User";
+                
+                dropdownMenu.appendChild(newAcftBtn);
+                newAcftBtn.appendChild(newAcftBtnLink);
+                dropdownMenu.appendChild(editUserBtn);
+                editUserBtn.appendChild(editUserBtnLink);
+                dropdownMenu.appendChild(deleteUserBtn);
+                deleteUserBtn.appendChild(deleteUserBtnLink);
+                
+                dropdown.appendChild(dropdownButton);
+                dropdown.appendChild(dropdownMenu);
+                dropdownDiv.appendChild(dropdown);
+                
+                cardHeaderDiv.appendChild(nameDiv);
+                cardHeaderDiv.appendChild(dropdownDiv);
+                cardDiv.appendChild(cardHeaderDiv);
+                
+                resultsContainer.appendChild(cardDiv);               
                 
                 const btnACFTmodalSave = document.getElementById("btn-modal3-acft-save");
                 btnACFTmodalSave.dataset.id = person[0].id;
                 btnACFTmodalSave.dataset.age = person[0].age;
 
-                const editBtn = document.querySelector(`#btn-edit-${person[0].id}`);
-                editBtn.setAttribute("data-bs-toggle", "modal");
-                editBtn.setAttribute("data-bs-target", "#editUserModal");
-                editBtn.dataset.id = person[0].id;
-                editBtn.dataset.name = person[0].name;
-                editBtn.dataset.age = person[0].age;
-
-
                 const btnUserModalSave = document.getElementById("btn-modal-save");
                 btnUserModalSave.dataset.id = person[0].id;
                 btnUserModalSave.dataset.age = person[0].age;
                 
-                const deleteBtn = document.querySelector(`#btn-del-${person[0].id}`); 
-                deleteBtn.setAttribute("data-bs-toggle", "modal");
-                deleteBtn.setAttribute("data-bs-target", "#delConfirModal");
-
                 const btnDeleteModalConfirm = document.getElementById("btn-modal4-confirm");
                 btnDeleteModalConfirm.dataset.id = person[0].id;
 
@@ -119,17 +163,16 @@ async function loadUserResults(id) {
                 return response.json();
             })
             .then(results => {
-
                 let smallDot = false;
                 let newUser = false;
                 if (results[0].acft_id === null) {
                     newUser = true;
                     return;
-                    //loadNewTestForm
                 }
                 
                 const testStatusBadge = document.querySelector(`#badge-${results[0].id}`);
                 updateTestStatusColor(testStatusBadge, results[0].date, smallDot, newUser);
+                
                 results.forEach(result => {
                     let formattedDate = formatDate(result.date);
                     let sdcSeconds = formatSeconds(result.sdc.seconds);
@@ -138,17 +181,24 @@ async function loadUserResults(id) {
                     let totalScore = result.mdlScore + result.sptScore + result.hrpScore + result.sdcScore + result.plkScore + result.runScore;
                     const card = document.querySelector(`#card-${result.person_id}`);
                     card.innerHTML +=
-                        `<div class="card-body">
+                        `<div id="card-body-${result.acft_id}" class="card-body">
                             <div class="accordion">
                                 <div class="accordion-item">
                                     <h2 class="accordion-header">
                                         <button id="date-banner-${result.acft_id}" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#result-${result.acft_id}" aria-expanded="true" aria-controls="result-${result.acft_id}">
-                                            ACFT (${formattedDate})&nbsp;<span id="badge-${result.acft_id}-score" class="badge rounded-pill text-bg-secondary">${totalScore}</span>&nbsp;
+                                            ACFT (${formattedDate})&nbsp;<span id="badge-${result.acft_id}-score" class="badge rounded-pill text-bg-secondary mx-1">${totalScore}</span>&nbsp;
                                         </button>
                                     </h2>
                                     <div id="result-${result.acft_id}" class="accordion-collapse collapse">
                                         <div class="accordion-body">
-                                            <p>Age on test day: ${result.acft_age}</p>
+                                            <div class="d-flex flex-row">
+                                                <div class="d-flex flex-column">
+                                                    <p class="mb-0"><em>Age on test day: ${result.acft_age}</em></p>
+                                                </div>    
+                                                    <div class="d-flex flex-grow-1 justify-content-end">
+                                                        <button id="testDel-${result.acft_id}" type="button" data-acftId="${result.acft_id}" class="btn btn-outline-secondary btn-sm ms-3 del-test-btn">Delete</button>
+                                                    </div>
+                                            </div>
                                             <p class="mb-0">Max Deadlift (MDL): ${result.mdl} lbs</p>
                                                 <div class="progress" role="progressbar" aria-label="mdl" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
                                                     <div class="progress-bar" style="width: ${result.mdlScore}%">${result.mdlScore} points</div>
@@ -173,12 +223,15 @@ async function loadUserResults(id) {
                                                 <div class="progress" role="progressbar" aria-label="run" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
                                                     <div class="progress-bar" style="width: ${result.runScore}%">${result.runScore} points</div>
                                                 </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>`
+                        
                     passFailTestBarColoring(result.acft_id);
+
                 });
                 const firstTestCardHeadder = document.querySelector(`#date-banner-${results[0].acft_id}`);
                 firstTestCardHeadder.classList.remove("collapsed");
@@ -250,6 +303,19 @@ async function deleteUser(id) {
         const firstChild = usersContainer.children[0];
         const dataId = firstChild.getAttribute("data-id");
         loadUserCard(dataId);
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+async function deleteACFT(acft_id) {
+    console.log(`inside acft delete function ${acft_id}`);
+    try {
+        const response = await fetch(`/api/acft/test/${acft_id}`, {
+            method: 'DELETE',
+        });
+        const card = document.querySelector(`#card-body-${acft_id}`);
+        card.remove();
     } catch (err) {
         console.error(err);
     }
@@ -430,6 +496,22 @@ const editAgeModalInput = document.getElementById("edit-user-age");
 const editAgeModalScroll = document.getElementById("edit-age-scroll-output");
 editAgeModalInput.addEventListener("input", function() {
     editAgeModalScroll.innerHTML = editAgeModalInput.value;
+});
+
+const testDelBtns = document.querySelectorAll(".del-test-btn");
+// testDelBtn.addEventListener("click", event => {
+//     const acft_id = this.getAttribute('data-acft-id');
+//     console.log(acft_id);
+//     deleteACFT(acft_id);
+// });
+console.log(testDelBtns);
+testDelBtns.forEach(button => {
+    console.log(testDelBtns);
+    button.addEventListener('click', () => {
+        const acft_Id = button.dataset.acftId;
+        console.log(acft_Id);
+        // deleteACFT(acft_Id);
+    });
 });
 
 const btnUserModalSave = document.getElementById("btn-modal-save");
