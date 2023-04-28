@@ -550,22 +550,6 @@ async function deleteUser(id) {
     }
 }
 
-async function deleteACFT(acftId, userId) {
-    try {
-        const response = await fetch(`/api/acft/test/${acftId}`, {
-            method: 'DELETE',
-        });
-        console.log(`Deleted test id ${acftId}`);  //dev tool
-        const userBtn = document.querySelector(`#btn-${userId}`);
-        userBtn.remove();
-        loadUserBtn(userId);
-        resultsContainer.innerHTML = '';
-        loadUserCard(userId);
-    } catch (err) {
-        console.error(err);
-    }
-}
-
 async function createNewTest(age, person_id) {
     const form = document.querySelector("#acft-modal-body form");
     const mdlInput = form.querySelector("#mdl");
@@ -617,6 +601,22 @@ async function createNewTest(age, person_id) {
     }
 }
 
+async function deleteACFT(acftId, userId) {
+    try {
+        const response = await fetch(`/api/acft/test/${acftId}`, {
+            method: 'DELETE',
+        });
+        console.log(`Deleted test id ${acftId}`);  //dev tool
+        const userBtn = document.querySelector(`#btn-${userId}`);
+        userBtn.remove();
+        loadUserBtn(userId);
+        resultsContainer.innerHTML = '';
+        loadUserCard(userId);
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 /* Future Feature */
 // updateTest(12, 71, 64, "2023-03-16 08:45:00", 10);
 
@@ -647,21 +647,6 @@ async function updateTest(id, pushup_score, situp_score, date, person_id) {
     }
 }
 
-async function deleteACFT(acftId, userId) {
-    try {
-        const response = await fetch(`/api/acft/test/${acftId}`, {
-            method: 'DELETE',
-        });
-        console.log(`Deleted test id ${acftId}`);  //dev tool
-        const userBtn = document.querySelector(`#btn-${userId}`);
-        userBtn.remove();
-        loadUserBtn(userId);
-        resultsContainer.innerHTML = '';
-        loadUserCard(userId);
-    } catch (err) {
-        console.error(err);
-    }
-}
 
 /* Synch age input and scroll elements in New User form */
 const ageModalInput = document.getElementById("user-age");
@@ -732,6 +717,229 @@ btnDeleteModalConfirm.addEventListener("click", event => {
     deleteUser(id);
     document.getElementById("btn-modal4-close").click();
 })
+
+/* MDL field validation */
+const mdlInput = document.getElementById("mdl");
+const mdlError = document.getElementById("mdl-error");
+
+const mdlValidator = () => {
+    const value = mdlInput.value;
+    if (!value) {
+        mdlError.textContent = "";
+        return true;
+    }
+    const pattern = /^[0-9]+$/;
+    if (!pattern.test(value)) {
+        mdlError.textContent = "Invalid input. Please enter a positive number.";
+        return false;
+    }
+    if (parseInt(value) < 0 || parseInt(value) > 500) {
+        mdlError.textContent = "Invalid value (0 to 500)";
+        return false;
+    }
+    mdlError.textContent = "";
+    return true;
+};
+
+const mdlCleave = new Cleave(mdlInput, {
+    numeral: true,
+    numeralPositiveOnly: true,
+    numeralIntegerScale: 10
+});
+
+mdlInput.addEventListener("blur", mdlValidator);
+mdlInput.addEventListener("input", mdlValidator);
+
+/* SPT field validation */
+const sptInput = document.getElementById("spt");
+const sptError = document.getElementById("spt-error");
+
+const sptValidator = () => {
+    const value = sptInput.value;
+    if (!value) {
+        mdlError.textContent = "";
+        return true;
+    }
+    const pattern = /^([0-9]|1[0-9]|20)(\.[0-9])?$/;
+    const isValid = pattern.test(value);
+    if (!isValid) {
+        sptError.textContent = "Invalid value (0.1 to 20)";
+        return false;
+    }
+    sptError.textContent = "";
+    return true;
+};
+
+const sptCleave = new Cleave(sptInput, {
+    numeral: true,
+    numeralDecimalMark: ".",
+    numeralPositiveOnly: true,
+    numeralDecimalScale: 1,
+    max: 20,
+});
+
+sptInput.addEventListener("blur", sptValidator);
+sptInput.addEventListener("input", sptValidator);
+
+/* HRP field validation */
+const hrpInput = document.getElementById("hrp");
+const hrpError = document.getElementById("hrp-error");
+
+const hrpValidator = () => {
+    const value = hrpInput.value;
+    if (!value) {
+        hrpError.textContent = "";
+        return true;
+    }
+    const pattern = /^[0-9]+$/;
+    if (!pattern.test(value)) {
+        hrpError.textContent = "Invalid input. Please enter a positive number.";
+        return false;
+    }
+    if (parseInt(value) > 100) {
+        hrpError.textContent = "Invalid value (0 to 100)";
+        return false;
+    }
+    hrpError.textContent = "";
+    return true;
+};
+
+const hrpCleave = new Cleave(hrpInput, {
+    numeral: true,
+    numeralPositiveOnly: true,
+    numeralIntegerScale: 3,
+    onValueChanged: function (e) {
+        if (parseInt(e.target.rawValue) > 100) {
+            e.target.setRawValue("100");
+        }
+    }
+});
+
+hrpInput.addEventListener("blur", hrpValidator);
+hrpInput.addEventListener("input", hrpValidator);
+
+/* SDC field validation */
+const sdcInput = document.getElementById("sdc");
+const sdcError = document.getElementById("sdc-error");
+
+const sdcValidator = () => {
+    const value = sdcInput.value;
+    if (!value) {
+        mdlError.textContent = "";
+        return true;
+    }
+    const pattern = /^([0-5][0-9]):([0-5][0-9])$/;
+    const [_, minutes, seconds] = pattern.exec(value) || [];
+    if (!minutes || !seconds) {
+        sdcError.textContent = "Invalid time format (mm:ss)";
+        return false;
+    }
+    if (parseInt(minutes) > 59 || parseInt(seconds) > 59) {
+        sdcError.textContent = "Invalid time range (max 59:59)";
+        return false;
+    }
+    sdcError.textContent = "";
+    return true;
+};
+
+const sdcCleave = new Cleave(sdcInput, {
+    time: true,
+    timePattern: ["m", "s"]
+});
+
+sdcInput.addEventListener("blur", sdcValidator);
+sdcInput.addEventListener("input", sdcValidator);
+
+/* PLK field validation */
+const plkInput = document.getElementById("plk");
+const plkError = document.getElementById("plk-error");
+
+const plkValidator = () => {
+    const value = plkInput.value;
+    if (!value) {
+        mdlError.textContent = "";
+        return true;
+    }
+    const pattern = /^([0-5][0-9]):([0-5][0-9])$/;
+    const [_, minutes, seconds] = pattern.exec(value) || [];
+    if (!minutes || !seconds) {
+        plkError.textContent = "Invalid time format (mm:ss)";
+        return false;
+    }
+    if (parseInt(minutes) > 59 || parseInt(seconds) > 59) {
+        plkError.textContent = "Invalid time range (max 59:59)";
+        return false;
+    }
+    plkError.textContent = "";
+    return true;
+};
+
+const plkCleave = new Cleave(plkInput, {
+    time: true,
+    timePattern: ["m", "s"]
+});
+
+plkInput.addEventListener("blur", plkValidator);
+plkInput.addEventListener("input", plkValidator);
+
+/* 2MR field validation */
+const runInput = document.getElementById("run");
+const runError = document.getElementById("run-error");
+
+const runValidator = () => {
+    const value = runInput.value;
+    if (!value) {
+        mdlError.textContent = "";
+        return true;
+    }
+    const pattern = /^([0-5][0-9]):([0-5][0-9])$/;
+    const [_, minutes, seconds] = pattern.exec(value) || [];
+    if (!minutes || !seconds) {
+        runError.textContent = "Invalid time format (mm:ss)";
+        return false;
+    }
+    if (parseInt(minutes) > 59 || parseInt(seconds) > 59) {
+        runError.textContent = "Invalid time range (max 59:59)";
+        return false;
+    }
+    runError.textContent = "";
+    return true;
+};
+
+const runCleave = new Cleave(runInput, {
+    time: true,
+    timePattern: ["m", "s"]
+});
+
+runInput.addEventListener("blur", runValidator);
+runInput.addEventListener("input", runValidator);
+
+/* ACFT date validation */
+const dateInput = document.getElementById("date");
+const dateError = document.getElementById("date-error");
+
+const dateValidator = () => {
+    const value = dateInput.value;
+    const currentDate = new Date();
+    const inputDate = new Date(value);
+    if (isNaN(inputDate.getTime())) {
+        dateError.textContent = "Invalid date format (yyyy-mm-dd)";
+        return false;
+    }
+    if (inputDate > currentDate) {
+        dateError.textContent = "Invalid date (cannot be in the future)";
+        return false;
+    }
+    dateError.textContent = "";
+    return true;
+};
+
+const dateCleave = new Cleave(dateInput, {
+    date: true,
+    datePattern: ["Y", "m", "d"],
+    delimiter: "-",
+    onValueChanged: dateValidator
+});
 
 /* Modal New User form top 'close' button */
 const btnModalClose1 = document.getElementById("btn-modal-close-1");
