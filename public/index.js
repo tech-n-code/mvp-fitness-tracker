@@ -1009,3 +1009,44 @@ darkModeSwitch.addEventListener("change", (event) => {
         htmlTag.removeAttribute('data-bs-theme');
     }
 });
+
+const attributionDiv = document.createElement("div");
+attributionDiv.classList.add("d-flex", "justify-content-center");
+const attribution = document.createElement("p");
+attribution.classList.add("text-secondary", "text-center", "mb-1");
+attribution.style.fontSize = "10px";
+attribution.innerHTML = "By Will Franceschini<br>A Galvanize bootcamp project<br>Logo credits: www.vecteezy.com";
+const footerDiv = document.querySelector("#footerDiv")
+attributionDiv.appendChild(attribution);
+footerDiv.appendChild(attributionDiv);
+
+const gitHubDiv = document.createElement("div");
+const gitHubLogo = document.createElement("img");
+gitHubLogo.src = "./github-mark.png";
+gitHubLogo.style.display = "block";
+gitHubLogo.style.width = "2rem";
+gitHubLogo.style.margin = "0.5rem auto";
+gitHubDiv.appendChild(gitHubLogo);
+document.body.append(gitHubDiv);
+
+gitHubLogo.addEventListener("click", () => {
+        window.open("https://github.com/tech-n-code", "_blank");
+    });
+gitHubLogo.addEventListener("mouseover", () => {
+        gitHubLogo.style.cursor = "pointer";
+    });
+
+const linkedInDiv = document.createElement("div");
+const linkedInLogo = document.createElement("img");
+linkedInLogo.src = "https://img.shields.io/badge/-LinkedIn-0A66C2?style=flat&logo=Linkedin&logoColor=white";
+linkedInLogo.style.display = "block";
+linkedInLogo.style.margin = "0.5rem auto";
+linkedInDiv.appendChild(linkedInLogo);
+document.body.append(linkedInDiv);
+
+linkedInLogo.addEventListener("click", () => {
+        window.open("https://www.linkedin.com/in/will-franceschini/", "_blank");
+    });
+linkedInLogo.addEventListener("mouseover", () => {
+        linkedInLogo.style.cursor = "pointer";
+    });
