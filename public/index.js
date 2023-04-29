@@ -26,7 +26,7 @@ async function loadUserBtn(id) {
                 btn.dataset.id = id;
                 btn.classList.add("btn", "px-3", "my-1", "position-relative", "btn-secondary", "text-wrap", "text-break");
                 btn.type = "button";
-                btn.innerHTML = `${result[0].name} <span id="btn-${result[0].id}-badge"></span>`
+                btn.innerHTML = `${result[0].name} <span id="btn-${result[0].id}-badge" data-userId="${result[0].id}"></span>`
                 btn.addEventListener("click", event => {
                     resultsContainer.innerHTML = '';
                     loadUserCard(id);
@@ -71,6 +71,7 @@ async function loadUserCard(id) {
                 
                 const badgeSpan = document.createElement("span");
                 badgeSpan.setAttribute("id", `badge-${person[0].id}`);
+                badgeSpan.setAttribute("data-userId", person[0].id);
                 
                 nameDiv.appendChild(nameParagraph);
                 nameDiv.appendChild(badgeSpan);
@@ -461,7 +462,6 @@ function updateTestStatusColor(elementObj, dateString, smallDot = false, newUser
         }
     } else {
         const progressBars = document.querySelectorAll(".progress-bar");
-        console.log(progressBars)
         let failedEvent = false;
         progressBars.forEach(progressBar => {
             if (progressBar.classList.contains("bg-danger")) {
@@ -472,6 +472,11 @@ function updateTestStatusColor(elementObj, dateString, smallDot = false, newUser
             elementObj.setAttribute("class", "");
             elementObj.classList.add("badge", "rounded-pill", "text-bg-danger", "mb-auto");
             elementObj.textContent = "Overdue";
+            const userId = elementObj.dataset.userid;
+            const userBtnBadge = document.querySelector(`#btn-${userId}-badge`);
+            userBtnBadge.setAttribute("class", "");
+            userBtnBadge.classList.add("position-absolute", "top-0", "start-100", "translate-middle", "p-2", "bg-danger", "border", "border-light", "rounded-circle");
+
         } else if (parsedDate >= sixMonthsAgo) {
             elementObj.setAttribute("class", "");
             elementObj.classList.add("badge", "rounded-pill", "text-bg-success", "mb-auto");
