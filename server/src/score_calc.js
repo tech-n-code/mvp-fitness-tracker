@@ -7,12 +7,12 @@ export function scoreNumBased(gender, age, event, num) {
     const eventVerbose = eventToVerbose(event);
     const genderStr = gender === "M" ? "male" : "female";
     const eventArray = scoringScales[genderStr][ageStr][eventVerbose];
-    console.log(eventArray)
+    //console.log(eventArray)
     let counter = 0;
     const highestRawScore = eventArray[eventArray.length-1].rawScore;
-    console.log(highestRawScore);
+    //console.log(highestRawScore);
     const lowestRawScore = eventArray[0].rawScore;
-    console.log(lowestRawScore);
+    //console.log(lowestRawScore);
     if (num >= highestRawScore) {
         return 100;
     }
@@ -44,7 +44,7 @@ export function scoreTimeBased(gender, age, event, min, sec) {
     const timeInSeconds = (min * 60) + sec;
     const genderStr = gender === "M" ? "male" : "female";
     const eventArray = scoringScales[genderStr][ageStr][eventVerbose];
-    console.log(eventArray);
+    //console.log(eventArray);
     if (eventVerbose === "2.5 mile walk" || eventVerbose === "12km bike" || eventVerbose === "1km swim" || eventVerbose === "5km row") {
         const rawScoreInSeconds = convertToSeconds(eventArray);
         return timeInSeconds <= rawScoreInSeconds ? "Go" : "No-Go";
