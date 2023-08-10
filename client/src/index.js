@@ -552,7 +552,7 @@ async function updateUser(id, name, age) {
 }
 
 async function deleteUser(id) {
-    console.log(`inside delete function ${id}`);
+    //console.log(`inside delete function ${id}`);
     try {
         const response = await fetch(`/api/acft/person/${id}`, {
             method: 'DELETE',
