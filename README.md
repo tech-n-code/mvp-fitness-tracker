@@ -4,7 +4,6 @@
 
 [![ACFT tracker](acft_tracker_screenshot.png)](https://mvp_acft.tech-n-code.com/)
 
-
 ## Tech Stack
 
   [![JavaScript](https://img.shields.io/badge/-JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
@@ -24,7 +23,6 @@
 
 - Build a Full-Stack minimum viable product (MVP) of a proposed web app
 - Must implement full CRUD (create, read, update, delete) functionality to a database
-- Must be RESTful compliant
 - Must perform API requests
 
 ## Installation & Setup
@@ -41,10 +39,14 @@
 ## Developer's Notes
 
 - The most challenging aspect of this app was converting ACFT scoring tables only available in PDF into JSON data suitable for calculations
-- I also develop my own insertScoresToJson() middleware to process the raw scores submitted with new ACFT tests
+- I also developed my own `insertScoresToJson()` middleware to process raw scores submitted with a new ACFT test
 - This particular app was initially developed within a week and demo to the class. I later refined it adding data validation and more functionality such as out of tolerance records tagging and UI improvements
 - Finally, I containerized the entire application utilizing Nginx on the client, Node.js and Express.js on the server, and a PostgreSQL database
 
 Watch a working demo of this project on my LinkedIn post below!
 
-:point_right::point_right::point_right: [ACFT Tracker demo](https://www.linkedin.com/posts/will-franceschini_softwareengineering-javascript-bootstrap-activity-7057858977325355008-TW0Y?utm_source=share&utm_medium=member_desktop) :point_left::point_left::point_left:
+:point_right::point_right::point_right: [ACFT Tracker short video](https://www.linkedin.com/posts/will-franceschini_softwareengineering-javascript-bootstrap-activity-7057858977325355008-TW0Y?utm_source=share&utm_medium=member_desktop) :point_left::point_left::point_left:
+
+## Visit the deployed demo
+
+[ACFT Tracker demo](https://mvp_acft.tech-n-code.com/)
