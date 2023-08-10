@@ -1,16 +1,23 @@
 import { scoringScales } from "./acft_tables.js";
 
-// console.log(scoreNumBased("F", 43, "hrp", 40)); //100
+//console.log(scoreNumBased("F", 43, "hrp", 3));
 
 export function scoreNumBased(gender, age, event, num) {
     const ageStr = ageToStrBracket(age);
     const eventVerbose = eventToVerbose(event);
     const genderStr = gender === "M" ? "male" : "female";
     const eventArray = scoringScales[genderStr][ageStr][eventVerbose];
+    console.log(eventArray)
     let counter = 0;
-    const highestRawScore = eventArray[eventArray.length-1].rawScore
-    if (num > highestRawScore) {
+    const highestRawScore = eventArray[eventArray.length-1].rawScore;
+    console.log(highestRawScore);
+    const lowestRawScore = eventArray[0].rawScore;
+    console.log(lowestRawScore);
+    if (num >= highestRawScore) {
         return 100;
+    }
+    if (num <= lowestRawScore) {
+        return 0;
     }
     for (let i = 0; i < eventArray.length; i++) {
         if (num === eventArray[i].rawScore) {
@@ -27,9 +34,9 @@ export function scoreNumBased(gender, age, event, num) {
     }
 }
 
-// console.log(scoreTimeBased("M", 38, "sdc", 2, 45)); //73
-// console.log(scoreTimeBased("M", 40, "run", 13, 50)); //67
-// console.log(scoreTimeBased("F", 22, "plk", 3, 40)); //100
+//console.log(scoreTimeBased("M", 38, "sdc", 2, 45));
+//console.log(scoreTimeBased("M", 40, "run", 13, 50));
+//console.log(scoreTimeBased("F", 22, "plk", 0, 55));
 
 export function scoreTimeBased(gender, age, event, min, sec) {
     const ageStr = ageToStrBracket(age);
@@ -37,14 +44,19 @@ export function scoreTimeBased(gender, age, event, min, sec) {
     const timeInSeconds = (min * 60) + sec;
     const genderStr = gender === "M" ? "male" : "female";
     const eventArray = scoringScales[genderStr][ageStr][eventVerbose];
+    console.log(eventArray);
     if (eventVerbose === "2.5 mile walk" || eventVerbose === "12km bike" || eventVerbose === "1km swim" || eventVerbose === "5km row") {
         const rawScoreInSeconds = convertToSeconds(eventArray);
         return timeInSeconds <= rawScoreInSeconds ? "Go" : "No-Go";
     } else if (eventVerbose === "plank") {  //higher time is better, some "---" fields in table
         let counter = 0;
-        const highestRawScoreInSeconds = convertToSeconds(eventArray[eventArray.length-1].rawScore);
-        if (timeInSeconds > highestRawScoreInSeconds) {
+        const highestIsBestRawScoreInSeconds = convertToSeconds(eventArray[eventArray.length-1].rawScore);
+        const lowestIsBadRawScoreInSeconds = convertToSeconds(eventArray[0].rawScore);
+        if (timeInSeconds >= highestIsBestRawScoreInSeconds) {
             return 100;
+        }
+        if (timeInSeconds <= lowestIsBadRawScoreInSeconds) {
+            return 0;
         }
         for (let i = 0; i < eventArray.length; i++) {
             if (eventArray[i].rawScore === "---") {  //skip row but keep track w/counter
@@ -62,10 +74,15 @@ export function scoreTimeBased(gender, age, event, min, sec) {
             }
         }
     } else {  //lower time is better, no "---" fields in table
-        const lowestRawScoreInSeconds = convertToSeconds(eventArray[eventArray.length-1].rawScore);
-        if (timeInSeconds < lowestRawScoreInSeconds) {
+        const lowestIsBestRawScoreInSeconds = convertToSeconds(eventArray[eventArray.length-1].rawScore);
+        const highestIsBadRawScoreInSeconds = convertToSeconds(eventArray[0].rawScore);
+        if (timeInSeconds <= lowestIsBestRawScoreInSeconds) {
             return 100;
         }
+        if (timeInSeconds >= highestIsBadRawScoreInSeconds) {
+            return 0;
+        }
+        if (timeInSeconds )
         for (let i = 0; i < eventArray.length; i++) {
             let rawScoreInSeconds = convertToSeconds(eventArray[i].rawScore);
             if (timeInSeconds === rawScoreInSeconds) {

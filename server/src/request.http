@@ -1,27 +1,30 @@
 ### All Persons ordered by name
-GET http://localhost:3000/api/acft/person
+GET http://localhost:3055/api/acft/person
+
+
 
 ### Person by ID
-GET http://localhost:3000/api/acft/person?id=3
-
+GET http://localhost:3055/api/acft/person?id=1
 
 
 ### All tests
-GET http://localhost:3000/api/acft/test
+GET http://localhost:3055/api/acft/test
+
 
 ### ACFT by test ID
-GET http://localhost:3000/api/acft/test?id=4
+GET http://localhost:3055/api/acft/test?id=4
+
 
 ### All tests for a person by person ID, ordered by test date descending
-GET http://localhost:3000/api/acft/test?personID=7
+GET http://localhost:3055/api/acft/test?personID=7
+
 
 ### Latest tests for person by ID
-GET http://localhost:3000/api/acft/test?personID=3&latest=true
-
+GET http://localhost:3055/api/acft/test?personID=3&latest=true
 
 
 ### Create person
-POST http://localhost:3000/api/acft/person
+POST http://localhost:3055/api/acft/person
 Content-Type: application/json
 
 {
@@ -30,8 +33,9 @@ Content-Type: application/json
     "age": 30
 }
 
+
 ### Update person by ID (all fields)
-PUT http://localhost:3000/api/acft/person/4
+PUT http://localhost:3055/api/acft/person/4
 Content-Type: application/json
 
 {
@@ -40,21 +44,22 @@ Content-Type: application/json
     "age": 32
 }
 
+
 ### Update person by ID (misc fields)
-PATCH http://localhost:3000/api/acft/person/4
+PATCH http://localhost:3055/api/acft/person/4
 Content-Type: application/json
 
 {
     "name": "Tim"
 }
 
-### Delete person by id
-DELETE http://localhost:3000/api/acft/person/4
 
+### Delete person by id
+DELETE http://localhost:3055/api/acft/person/4
 
 
 ### Create test
-POST http://localhost:3000/api/acft/test
+POST http://localhost:3055/api/acft/test
 Content-Type: application/json
 
 {
@@ -73,8 +78,9 @@ Content-Type: application/json
     "person_id": 12
 }
 
+
 ### Update test by id (all fields)
-PUT http://localhost:3000/api/acft/test/6
+PUT http://localhost:3055/api/acft/test/6
 Content-Type: application/json
 
 {
@@ -93,8 +99,9 @@ Content-Type: application/json
     "person_id": 4
 }
 
+
 ### Update test by ID (misc fields)
-PATCH http://localhost:3000/api/acft/test/12
+PATCH http://localhost:3055/api/acft/test/12
 Content-Type: application/json
 
 {
@@ -103,5 +110,6 @@ Content-Type: application/json
     "run": "00:18:45"
 }
 
+
 ### Delete test by ID
-DELETE http://localhost:3000/api/acft/test/41
+DELETE http://localhost:3055/api/acft/test/41

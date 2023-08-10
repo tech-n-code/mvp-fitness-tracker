@@ -12,6 +12,7 @@ async function fetchUsers() {
         loadUserCard(users[0].id);
     } catch (err) {
         console.error(err);
+        console.log('Not fetching users')
     }
 }
 
