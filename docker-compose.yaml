@@ -2,21 +2,21 @@ version: "3"
 services:
   database:
     image: postgres
-    container_name: acft-tracker-db
+    container_name: mvp-acft-db
     restart: unless-stopped
     # Load all env vars from .env into the container's environment.
     env_file: .env
     ports:
       - 5432:5432
     networks:
-      - acft-tracker_network
+      - mvp-acft_network
     volumes:
       - pg-data:/var/lib/postgresql/data
       - ./db/migration.sql:/docker-entrypoint-initdb.d/migration.sql
       - ./db/seed.sql:/docker-entrypoint-initdb.d/seed.sql
   server:
-    image: acft-tracker/server
-    container_name: acft-tracker-api
+    image: mvp-acft/server
+    container_name: mvp-acft-api
     restart: unless-stopped
     build: ./server
     environment:
@@ -28,31 +28,29 @@ services:
     ports:
       - ${SERVER_PORT}:${SERVER_PORT}
     networks:
-      - acft-tracker_network
+      - mvp-acft_network
     volumes:
-      # This allows live reload inside a docker container by mapping your
-      # filesystem to the container's.
+      # Allows live reload inside a docker container
       - ./server/src:/code/src
     command: npm start
   client:
-    image: acft-tracker/client
-    container_name: acft-tracker-app
+    image: mvp-acft/client
+    container_name: mvp-acft-app
     restart: unless-stopped
     build: ./client
     environment:
-      API_URL: http://acft-tracker-api
+      API_URL: http://mvp-acft-api
       PORT: ${SERVER_PORT}
     depends_on:
       - server
     ports:
       - ${CLIENT_PORT}:80
     networks:
-      - acft-tracker_network
+      - mvp-acft_network
     volumes:
-      # This allows live reload inside a docker container by mapping your
-      # filesystem to the container's.
+      # Allows live reload inside a docker container
       - ./client/src:/code/src
 networks:
-  acft-tracker_network:
+  mvp-acft_network:
 volumes:
   pg-data:
