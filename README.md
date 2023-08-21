@@ -32,7 +32,7 @@
 - `cd` into the `mvp-fitness-tracker` directory
 - run `cp .env.template .env`
 - run `npm install --prefix=server`
-- run `docker-compose up --build`
+- run `docker-compose up -d --build`
 - to power-down the app and delete all containers and associated volumes run `docker-compose down -v`
 - (optional) to power-down the app and also delete its images run `docker-compose down -v --rmi all`
 
