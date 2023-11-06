@@ -27,12 +27,13 @@
 
 ## Installation & Setup
 
-- clone the project repo
 - make sure Docker Desktop is installed and running on your machine
+- click the green "code" button above, then click the 'copy' icon under HTTPS to copy the repo's URL
+- on your terminal run `git clone <repo-URL>`
 - `cd` into the `mvp-fitness-tracker` directory
 - run `cp .env.template .env`
-- run `npm install --prefix=server`
 - run `docker-compose up -d --build`
+- go to `localhost:3000` on your browser
 - to power-down the app and delete all containers and associated volumes run `docker-compose down -v`
 - (optional) to power-down the app and also delete its images run `docker-compose down -v --rmi all`
 
