@@ -1,8 +1,7 @@
-FROM node:18-alpine
-RUN npm install -g npm@9.8.1
+FROM node:20.9.0-alpine3.18
 WORKDIR /code
 COPY package*.json ./
 RUN npm ci
 COPY . .
-EXPOSE 3055
+EXPOSE 8000
 CMD ["npm", "start"]
