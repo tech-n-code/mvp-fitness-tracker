@@ -50,4 +50,4 @@ Watch a working demo of this project on my LinkedIn post below!
 
 ## Visit the deployed demo
 
-[ACFT Tracker demo](https://mvp_acft.tech-n-code.com/)
+[ACFT Tracker demo](https://mvp-acft.tech-n-code.com/)
